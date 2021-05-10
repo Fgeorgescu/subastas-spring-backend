@@ -2,6 +2,7 @@ package com.subastas.virtual.controller;
 
 import com.subastas.virtual.dto.user.UserInformation;
 import com.subastas.virtual.dto.user.http.UserRegistrationRequest;
+import com.subastas.virtual.dto.user.http.request.CreatePasswordRequest;
 import com.subastas.virtual.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,15 @@ public class UserController {
         log.info("Creando usuario con parametros {}", request);
 
         return ResponseEntity.ok().body(userService.createUser(request));
+    }
+
+    @PatchMapping(value = "/users/{id}/password")
+    public ResponseEntity updatePassword(@PathVariable("id") int id, @RequestBody CreatePasswordRequest request) {
+        log.info("Actualizando contraseña del usuario con parámetros {}", request);
+
+        userService.updatePasswordFirstTime(id, request.getPassword(), request.getValidationCode());
+
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping(value = "/users/{id}")

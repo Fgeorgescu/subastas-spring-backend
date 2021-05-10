@@ -28,8 +28,28 @@ public class UserService {
     }
 
     public UserInformation getUser(int id) {
+        //se puede agregar que sea el user o un admin.
         log.info("Buscando usuario con id {}", id);
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
 
+    }
+
+    public void updatePasswordFirstTime(int id, String password, String validationCode) {
+        log.info("Buscando usuario con id {}", id);
+        UserInformation user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
+        log.info("usuario con id {}: {}", id, user);
+
+        if (user.getPassword() == null && validationCode.equals(user.getValidationCode())) {
+            log.info("Valores correctos, actualizamos el usuario {} con la contraseña a {}", user, password);
+
+            user.setPassword(password);
+            log.info("Cambiamos pa pass, actualizamos el usuario {} con la contraseña a {}", user, password);
+            userRepository.save(user);
+            log.info("guardado");
+
+            return;
+        }
+
+        throw new RuntimeException("Error updating new password identity");
     }
 }

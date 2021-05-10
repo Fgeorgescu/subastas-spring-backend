@@ -15,6 +15,8 @@ public class UserInformation {
     private String name;
     private String mail;
     private String password;
+    private String validationCode = "123";
+    private String status;
 
     public UserInformation(String name, String mail) {
         this.name = name;
@@ -44,7 +46,7 @@ public class UserInformation {
         return password;
     }
 
-    public void setPassword(String category) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
@@ -54,5 +56,24 @@ public class UserInformation {
 
     public void setMail(String mail) {
         this.mail = mail;
+    }
+
+    public String getValidationCode() {
+        return validationCode;
+    }
+
+    public void setValidationCode(String validationCode) {
+        this.validationCode = validationCode;
+    }
+
+    @Override
+    public String toString() {
+        return "UserInformation{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", mail='" + mail + '\'' +
+                ", password='" + password + '\'' +
+                ", validationCode='" + validationCode + '\'' +
+                '}';
     }
 }
