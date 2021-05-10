@@ -33,7 +33,7 @@ public class UserController {
     public ResponseEntity updatePassword(@PathVariable("id") int id, @RequestBody CreatePasswordRequest request) {
         log.info("Actualizando contraseña del usuario con parámetros {}", request);
 
-        userService.updatePasswordFirstTime(id, request.getPassword(), request.getValidationCode());
+        userService.updatePasswordFirstTime(id, request.getUsername(), request.getPassword(), request.getValidationCode());
 
         return ResponseEntity.ok().build();
     }

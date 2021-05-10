@@ -21,7 +21,7 @@ public class UserService {
     }
 
     public UserInformation createUser(UserRegistrationRequest request) {
-        //Validar unicidad del nombre de usuario
+        // TODO: Validar unicidad del nombre de usuario
         UserInformation user = new UserInformation(request.getUsername(), request.getMail());
         user = userRepository.save(user);
         return user;
@@ -34,9 +34,9 @@ public class UserService {
 
     }
 
-    public void updatePasswordFirstTime(int id, String password, String validationCode) {
+    public void updatePasswordFirstTime(int id, String username, String password, String validationCode) {
         log.info("Buscando usuario con id {}", id);
-        UserInformation user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
+        UserInformation user = userRepository.findByName(username).orElseThrow(() -> new RuntimeException("Not found"));
         log.info("usuario con id {}: {}", id, user);
 
         if (user.getPassword() == null && validationCode.equals(user.getValidationCode())) {
