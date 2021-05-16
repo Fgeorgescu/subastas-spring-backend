@@ -94,6 +94,13 @@
             <version>2.3.4.RELEASE</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.10</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 / Generates random string -->
         <dependency>
             <groupId>org.apache.commons</groupId>

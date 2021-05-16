@@ -2,10 +2,11 @@ package com.subastas.virtual.service;
 
 import com.subastas.virtual.dto.user.UserInformation;
 import com.subastas.virtual.dto.user.http.UserRegistrationRequest;
+import com.subastas.virtual.exception.custom.UserAlreadyExistsException;
 import com.subastas.virtual.repository.UserInformationRepository;
-import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -26,13 +27,22 @@ public class UserService {
 
     public UserInformation createUser(UserRegistrationRequest request) {
         // TODO: Validar unicidad del nombre de usuario
+
         UserInformation user = new UserInformation(request.getUsername(), request.getMail());
-        user = userRepository.save(user);
-        sendSimpleMessage(
-                user.getMail(),
-                "Bienvenido",
-                String.format("Hola! Tu código de validación es \"%s\"", user.getValidationCode())
-        );
+
+        try {
+            user = userRepository.save(user);
+            sendSimpleMessage(
+                    user.getMail(),
+                    "Bienvenido",
+                    String.format("Hola! Tu código de validación es \"%s\"", user.getValidationCode())
+            );
+        } catch (DataIntegrityViolationException e) {
+            userRepository.delete(user); // Si implementamos transacciones podríamos eliminar este delete
+            log.error("Error: {}", e.getMessage());
+
+            throw new UserAlreadyExistsException("El usuario o el mail ya existen");
+        }
         return user;
     }
 
@@ -45,7 +55,7 @@ public class UserService {
 
     public void updatePasswordFirstTime(int id, String username, String password, String validationCode) {
         log.info("Buscando usuario con id {}", id);
-        UserInformation user = userRepository.findByName(username).orElseThrow(() -> new RuntimeException("Not found"));
+        UserInformation user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Not found"));
         log.info("usuario con id {}: {}", id, user);
 
         if ("ADMIN".equals(validationCode) ||

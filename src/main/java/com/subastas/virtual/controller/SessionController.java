@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -29,7 +28,7 @@ public class SessionController {
         try {
             UserInformation userInformation = sessionService.validateCredentials(creds);
 
-            session.setAttribute("username", userInformation.getName());
+            session.setAttribute("username", userInformation.getUsername());
             session.setAttribute("user", userInformation);
             return ResponseEntity.noContent().build();
 

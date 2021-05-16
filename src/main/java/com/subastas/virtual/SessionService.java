@@ -15,7 +15,7 @@ public class SessionService {
     }
 
     public UserInformation validateCredentials(LoginCredentials creds) {
-        UserInformation aux = userInformationRepository.findByName(creds.getUsername()).orElseThrow();
+        UserInformation aux = userInformationRepository.findByUsername(creds.getUsername()).orElseThrow();
 
         if (aux.getPassword() == null) {
             throw new RuntimeException("Account not validated");

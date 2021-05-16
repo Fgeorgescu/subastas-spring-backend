@@ -6,5 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface UserInformationRepository extends CrudRepository<UserInformation, Integer> {
-    Optional<UserInformation> findByName(String name); // Name hace referencia al nombre de usuario
+    Optional<UserInformation> findByUsername(String username); // Name hace referencia al nombre de usuario
 }
