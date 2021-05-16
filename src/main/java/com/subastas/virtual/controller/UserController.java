@@ -1,17 +1,15 @@
 package com.subastas.virtual.controller;
 
-import com.subastas.virtual.dto.user.UserInformation;
 import com.subastas.virtual.dto.user.http.UserRegistrationRequest;
 import com.subastas.virtual.dto.user.http.request.CreatePasswordRequest;
 import com.subastas.virtual.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
+@CrossOrigin
 public class UserController {
     Logger log = LoggerFactory.getLogger(UserController.class);
 
