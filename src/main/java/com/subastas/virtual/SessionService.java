@@ -2,6 +2,7 @@ package com.subastas.virtual;
 
 import com.subastas.virtual.dto.session.LoginCredentials;
 import com.subastas.virtual.dto.user.UserInformation;
+import com.subastas.virtual.exception.custom.UnauthorizedException;
 import com.subastas.virtual.repository.UserInformationRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +19,11 @@ public class SessionService {
         UserInformation aux = userInformationRepository.findByUsername(creds.getUsername()).orElseThrow();
 
         if (aux.getPassword() == null) {
-            throw new RuntimeException("Account not validated");
+            throw new UnauthorizedException("Account not validated");
         }
         if (aux.getPassword().equals(creds.getPassword())) {
             return aux;
         }
-        throw new RuntimeException("Not Authorized");
+        throw new UnauthorizedException("Not Authorized");
     }
 }
