@@ -1,5 +1,6 @@
 package com.subastas.virtual.dto.user;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -15,12 +16,14 @@ public class UserInformation {
     private String name;
     private String mail;
     private String password;
-    private String validationCode = "123";
+    private String validationCode;
     private String status;
 
     public UserInformation(String name, String mail) {
         this.name = name;
         this.mail = mail;
+        this.validationCode = RandomStringUtils.randomAlphabetic(5);
+
     }
 
     public UserInformation() {

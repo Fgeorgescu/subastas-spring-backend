@@ -6,6 +6,8 @@ import com.subastas.virtual.repository.UserInformationRepository;
 import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 
@@ -15,15 +17,22 @@ public class UserService {
     Logger log = LoggerFactory.getLogger(UserService.class);
 
     UserInformationRepository userRepository;
+    private JavaMailSender emailSender;
 
-    public UserService(UserInformationRepository userRepository) {
+    public UserService(UserInformationRepository userRepository, JavaMailSender emailSender) {
         this.userRepository = userRepository;
+        this.emailSender = emailSender;
     }
 
     public UserInformation createUser(UserRegistrationRequest request) {
         // TODO: Validar unicidad del nombre de usuario
         UserInformation user = new UserInformation(request.getUsername(), request.getMail());
         user = userRepository.save(user);
+        sendSimpleMessage(
+                user.getMail(),
+                "Bienvenido",
+                String.format("Hola! Tu código de validación es \"%s\"", user.getValidationCode())
+        );
         return user;
     }
 
@@ -51,5 +60,16 @@ public class UserService {
         }
 
         throw new RuntimeException("Error updating new password identity");
+    }
+
+
+    public void sendSimpleMessage(
+            String to, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("appdistgrupo3@gmail.com");
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+        emailSender.send(message);
     }
 }
