@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @CrossOrigin
+@RequestMapping(value = "/items")
 public class ItemController {
 
     private final Logger log = LoggerFactory.getLogger(ItemController.class);
@@ -31,7 +32,7 @@ public class ItemController {
     }
 
     @SneakyThrows
-    @PostMapping("/items")
+    @PostMapping("")
     public ResponseEntity<?> registerItem(@RequestBody RegisterItemRequest request) {
         log.info("Creating new Item record with information: {}", request);
         return ResponseEntity
@@ -39,19 +40,19 @@ public class ItemController {
                 .body(itemService.registerItem(request));
     }
 
-    @PostMapping("/items/{id}/photos")
+    @PostMapping("/{id}/photos")
     public ResponseEntity<?> uploadPhoto(@PathVariable("id") int itemId, @RequestParam("image") MultipartFile file) {
         RegisteredItem updatedItem = itemService.attachPicture(itemId, file);
 
         return ResponseEntity.created(URI.create("/test")).body(updatedItem);
     }
 
-    @GetMapping("/items/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<RegisteredItem> getItemById(@PathVariable("id") int itemId) {
         return ResponseEntity.ok(itemService.getItem(itemId));
     }
 
-    @GetMapping("/items/{id}/photos/{photoId}")
+    @GetMapping("/{id}/photos/{photoId}")
     public ResponseEntity<?> getItemPhotoById(@PathVariable("id") int itemId, @PathVariable("photoId") int photoId) {
         return ResponseEntity.ok(itemService.getItemPhoto(itemId, photoId));
     }

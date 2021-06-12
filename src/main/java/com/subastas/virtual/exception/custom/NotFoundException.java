@@ -8,4 +8,8 @@ public class NotFoundException extends RuntimeException {
     public NotFoundException(String element, int id) {
         super(String.format("We could not find %s with id %d", element, id));
     }
+
+    public NotFoundException(String element, String id) {
+        super(String.format("We could not find %s with id %s", element, id));
+    }
 }

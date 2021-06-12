@@ -2,6 +2,7 @@ package com.subastas.virtual.controller;
 
 import com.subastas.virtual.SessionService;
 import com.subastas.virtual.dto.session.LoginCredentials;
+import com.subastas.virtual.dto.session.ValidationCodeCredentials;
 import com.subastas.virtual.dto.user.UserInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,21 +29,32 @@ public class SessionController {
         try {
             UserInformation userInformation = sessionService.validateCredentials(creds);
 
-            session.setAttribute("username", userInformation.getUsername());
-            session.setAttribute("user", userInformation);
-            return ResponseEntity.noContent().build();
+            sessionService.login(session, userInformation);
+
+            return ResponseEntity.ok(userInformation);
 
         } catch (RuntimeException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public String logout(HttpSession session) {
-        log.info("Logging out user {}", session.getAttribute("user"));
-        session.removeAttribute("username");
-        session.removeAttribute("user");
-        log.info("Logged out, redirecting");
-        return "redirect:/ping";
+    @PostMapping(value = "/validate")
+    public ResponseEntity<?> loginWithValidationCode(@RequestBody ValidationCodeCredentials creds, HttpSession session) {
+        try {
+            UserInformation userInformation = sessionService.validateValidationCode(creds);
+
+            sessionService.login(session, userInformation);
+
+            return ResponseEntity.ok(userInformation);
+
+        } catch (RuntimeException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+    }
+
+    @PostMapping(value = "/logout")
+    public ResponseEntity<?> logout(HttpSession session) {
+        sessionService.logout(session);
+        return ResponseEntity.noContent().build();
     }
 }
