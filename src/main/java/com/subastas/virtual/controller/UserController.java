@@ -33,8 +33,9 @@ public class UserController {
     public ResponseEntity updatePassword(@PathVariable("id") int id, @RequestBody CreatePasswordRequest request) {
         log.info("Actualizando contraseña del usuario con parámetros {}", request);
 
-        UserInformation user = userService.updatePasswordFirstTime(id, request.getUsername(), request.getPassword(), request.getValidationCode());
+        // TODO: Agregar validación del usuario con el ID y la sesión.
 
+        UserInformation user = userService.updatePassword(id, request.getPassword());
         return ResponseEntity.ok(user);
     }
 

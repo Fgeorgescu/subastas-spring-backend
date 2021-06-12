@@ -1,5 +1,8 @@
 package com.subastas.virtual.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +20,7 @@ public class UserInformation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonProperty("user_id")
     private int id;
 
     @Column(unique = true)
@@ -24,6 +28,7 @@ public class UserInformation {
     @Column(unique = true)
     private String mail;
     private String password;
+    // @JsonIgnore Esta info no debería viajar en la respuesta, pero la enviamos en desarrollo por facilidad para validar usuarios.
     private String validationCode;
     private String status;
     private String role;

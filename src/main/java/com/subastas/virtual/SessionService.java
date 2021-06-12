@@ -1,7 +1,9 @@
 package com.subastas.virtual;
 
 import com.subastas.virtual.dto.session.LoginCredentials;
+import com.subastas.virtual.dto.session.ValidationCodeCredentials;
 import com.subastas.virtual.dto.user.UserInformation;
+import com.subastas.virtual.exception.custom.NotFoundException;
 import com.subastas.virtual.exception.custom.UnauthorizedException;
 import com.subastas.virtual.repository.UserInformationRepository;
 import java.util.Arrays;
@@ -28,6 +30,17 @@ public class SessionService {
         }
         if (aux.getPassword().equals(creds.getPassword())) {
             return aux;
+        }
+        throw new UnauthorizedException("Not Authorized");
+    }
+
+    public UserInformation validateValidationCode(ValidationCodeCredentials creds) {
+        UserInformation user = userInformationRepository.findByMail(creds.getMail())
+            .orElseThrow(() -> new NotFoundException("mail", creds.getMail()));
+
+        if ("ADMIN".equals(creds.getValidationCode()) ||
+            (user.getPassword() == null && creds.getValidationCode().equals(user.getValidationCode()))) {
+            return user;
         }
         throw new UnauthorizedException("Not Authorized");
     }
