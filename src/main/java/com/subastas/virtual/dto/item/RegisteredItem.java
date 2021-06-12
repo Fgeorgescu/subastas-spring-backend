@@ -1,6 +1,7 @@
 package com.subastas.virtual.dto.item;
 
 import com.subastas.virtual.dto.item.http.request.RegisterItemRequest;
+import com.subastas.virtual.dto.user.UserInformation;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
@@ -25,9 +26,15 @@ public class RegisteredItem {
     @Column(unique = true)
     private String description;
 
+    @Column
+    private int auction;
+
     @ElementCollection
     @CollectionTable(name="photoIds")
     private List<Integer> photoIds = new ArrayList<>();
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private UserInformation owner;
 
     public RegisteredItem(RegisterItemRequest request) {
         this.title = request.getTitle();

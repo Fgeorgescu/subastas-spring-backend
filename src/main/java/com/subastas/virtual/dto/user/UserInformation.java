@@ -1,5 +1,6 @@
 package com.subastas.virtual.dto.user;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,8 +10,7 @@ import org.hibernate.annotations.Columns;
 import javax.persistence.*;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @Table(name = "users")
 public class UserInformation {
@@ -26,6 +26,8 @@ public class UserInformation {
     private String password;
     private String validationCode;
     private String status;
+    private String role;
+    private String category;
 
     public UserInformation(String username, String mail) {
         this.username = username;

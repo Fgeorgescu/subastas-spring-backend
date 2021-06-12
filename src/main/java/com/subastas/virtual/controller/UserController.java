@@ -1,5 +1,6 @@
 package com.subastas.virtual.controller;
 
+import com.subastas.virtual.dto.user.UserInformation;
 import com.subastas.virtual.dto.user.http.UserRegistrationRequest;
 import com.subastas.virtual.dto.user.http.request.CreatePasswordRequest;
 import com.subastas.virtual.service.UserService;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
+@RequestMapping(value = "/users")
 public class UserController {
     Logger log = LoggerFactory.getLogger(UserController.class);
 
@@ -20,23 +22,23 @@ public class UserController {
     }
 
 
-    @PostMapping(value = "/users")
+    @PostMapping(value = "")
     public ResponseEntity<?> createUser(@RequestBody UserRegistrationRequest request) {
         log.info("Creando usuario con parametros {}", request);
 
         return ResponseEntity.ok().body(userService.createUser(request));
     }
 
-    @PatchMapping(value = "/users/{id}/password")
+    @PatchMapping(value = "/{id}/password")
     public ResponseEntity updatePassword(@PathVariable("id") int id, @RequestBody CreatePasswordRequest request) {
         log.info("Actualizando contraseña del usuario con parámetros {}", request);
 
-        userService.updatePasswordFirstTime(id, request.getUsername(), request.getPassword(), request.getValidationCode());
+        UserInformation user = userService.updatePasswordFirstTime(id, request.getUsername(), request.getPassword(), request.getValidationCode());
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(user);
     }
 
-    @GetMapping(value = "/users/{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<?> getUser(@PathVariable("id") int id) {
         log.info("Procesando GET con id {}", id);
         return ResponseEntity.ok().body(userService.getUser(id));

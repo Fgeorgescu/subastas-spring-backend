@@ -53,7 +53,7 @@ public class UserService {
 
     }
 
-    public void updatePasswordFirstTime(int id, String username, String password, String validationCode) {
+    public UserInformation updatePasswordFirstTime(int id, String username, String password, String validationCode) {
         log.info("Buscando usuario con id {}", id);
         UserInformation user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Not found"));
         log.info("usuario con id {}: {}", id, user);
@@ -64,10 +64,10 @@ public class UserService {
 
             user.setPassword(password);
             log.info("Cambiamos pa pass, actualizamos el usuario {} con la contraseña a {}", user, password);
-            userRepository.save(user);
+            user = userRepository.save(user);
             log.info("guardado");
 
-            return;
+            return user;
         }
 
         throw new RuntimeException("Error updating new password identity");
