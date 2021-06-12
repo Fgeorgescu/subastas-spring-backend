@@ -4,6 +4,7 @@ import com.subastas.virtual.dto.user.UserInformation;
 import com.subastas.virtual.dto.user.http.UserRegistrationRequest;
 import com.subastas.virtual.dto.user.http.request.CreatePasswordRequest;
 import com.subastas.virtual.service.UserService;
+import java.net.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +22,12 @@ public class UserController {
         this.userService = userService;
     }
 
-
     @PostMapping(value = "")
     public ResponseEntity<?> createUser(@RequestBody UserRegistrationRequest request) {
         log.info("Creando usuario con parametros {}", request);
 
-        return ResponseEntity.ok().body(userService.createUser(request));
+        UserInformation user = userService.createUser(request);
+        return ResponseEntity.created(URI.create("/users/" + user.getId())).body(user);
     }
 
     @PatchMapping(value = "/{id}/password")

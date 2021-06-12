@@ -79,7 +79,7 @@ public class UserService {
   public void sendSimpleMessage(
       String to, String subject, String text) {
     if (System.getenv("GMAIL_PASSWORD") == null
-        || System.getenv("GMAIL_PASSWORD") == "null") {
+        || System.getenv("GMAIL_PASSWORD") == "") {
       log.warn("NOT PASSWORD SET, MAIL WILL NOT BE SEND BUT USER WILL BE CREATED");
       // En caso de no tener la env definida no hacemos nada, no se manda el mail.
       // Lo hacemos para facilitar el desarrollo del frontend, ya que tienen que settear la pass
