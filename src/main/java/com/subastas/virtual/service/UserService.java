@@ -30,8 +30,8 @@ public class UserService {
 
   public UserInformation createUser(UserRegistrationRequest request) {
     // TODO: Validar unicidad del nombre de usuario
-
-    UserInformation user = new UserInformation(request.getUsername(), request.getMail());
+    // Todo: Debería ser una transacción
+    UserInformation user = new UserInformation(request);
 
     try {
       user = userRepository.save(user);
@@ -79,7 +79,7 @@ public class UserService {
   public void sendSimpleMessage(
       String to, String subject, String text) {
     if (System.getenv("GMAIL_PASSWORD") == null
-        || System.getenv("GMAIL_PASSWORD") == "") {
+        || "".equals(System.getenv("GMAIL_PASSWORD"))) {
       log.warn("NOT PASSWORD SET, MAIL WILL NOT BE SEND BUT USER WILL BE CREATED");
       // En caso de no tener la env definida no hacemos nada, no se manda el mail.
       // Lo hacemos para facilitar el desarrollo del frontend, ya que tienen que settear la pass

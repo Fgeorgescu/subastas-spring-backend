@@ -7,6 +7,7 @@ import com.subastas.virtual.exception.custom.NotFoundException;
 import com.subastas.virtual.repository.ItemPhotoRepository;
 import com.subastas.virtual.repository.ItemRepository;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -47,9 +48,16 @@ public class ItemService {
     }
 
     public RegisteredItem getItem(int itemId) {
-        return itemRepository.findById(itemId).orElseThrow(
-                () -> new NotFoundException("item", itemId)
+        RegisteredItem item = itemRepository.findById(itemId).orElseThrow(
+            () -> new NotFoundException("item", itemId)
         );
+
+        item.setImageUrls(Arrays.asList(
+            "https://images.unsplash.com/photo-1621569898825-ef12e7592f94?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80",
+            "http://images.unsplash.com/photo-1593642702821-c8da6771f0c6?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1778&q=80"
+        ));
+        // TODO: eliminar hardcodeo
+        return  item;
     }
 
     public Object getItemPhoto(int itemId, int photoId) {

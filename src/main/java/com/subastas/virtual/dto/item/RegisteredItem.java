@@ -1,8 +1,10 @@
 package com.subastas.virtual.dto.item;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.subastas.virtual.dto.item.http.request.RegisterItemRequest;
 import com.subastas.virtual.dto.user.UserInformation;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.persistence.*;
 import lombok.Getter;
@@ -28,6 +30,10 @@ public class RegisteredItem {
 
     @Column
     private int auction;
+
+    @Transient
+    @JsonProperty("image_urls")
+    private List<String> imageUrls;
 
     @ElementCollection
     @CollectionTable(name="photoIds")
