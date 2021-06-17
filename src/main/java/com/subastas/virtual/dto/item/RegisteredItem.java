@@ -4,16 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.subastas.virtual.dto.item.http.request.RegisterItemRequest;
 import com.subastas.virtual.dto.user.UserInformation;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.persistence.*;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @Table(name = "items")
 public class RegisteredItem {
@@ -25,14 +22,14 @@ public class RegisteredItem {
     @Column(unique = true)
     private String title;
 
-    @Column(unique = true)
+    @Column
     private String description;
 
     @Column
     private int auction;
 
-    @Transient
-    @JsonProperty("image_urls")
+    @ElementCollection
+    @CollectionTable(name="imageUrls")
     private List<String> imageUrls;
 
     @ElementCollection
@@ -45,6 +42,7 @@ public class RegisteredItem {
     public RegisteredItem(RegisterItemRequest request) {
         this.title = request.getTitle();
         this.description = request.getDescription();
+        this.imageUrls = request.getImageUrls();
     }
 
 }
