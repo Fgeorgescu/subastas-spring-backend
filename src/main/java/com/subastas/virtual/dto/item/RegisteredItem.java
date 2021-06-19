@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class RegisteredItem {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(unique = true)
@@ -30,6 +30,7 @@ public class RegisteredItem {
 
     @ElementCollection
     @CollectionTable(name="imageUrls")
+    @JsonProperty("image_urls")
     private List<String> imageUrls;
 
     public RegisteredItem(RegisterItemRequest request) {

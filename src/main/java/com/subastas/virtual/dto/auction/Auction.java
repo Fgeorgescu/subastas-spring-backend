@@ -16,10 +16,10 @@ public class Auction {
     public static final String STATUS_PENDING = "pending";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(unique = true)
+    @Column
     private String title;
 
     @Column

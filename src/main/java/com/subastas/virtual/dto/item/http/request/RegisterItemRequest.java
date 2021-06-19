@@ -17,6 +17,6 @@ public class RegisterItemRequest {
     private String history;
 
     @JsonProperty("image_urls")
-    @JsonAlias("imageUrl")
+    @JsonAlias("imageUrls")
     private List<String> imageUrls;
 }

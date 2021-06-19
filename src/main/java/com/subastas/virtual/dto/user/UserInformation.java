@@ -20,7 +20,7 @@ import javax.persistence.*;
 public class UserInformation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("user_id")
     private int id;
 

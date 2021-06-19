@@ -51,9 +51,4 @@ public class ItemController {
     public ResponseEntity<RegisteredItem> getItemById(@PathVariable("id") int itemId) {
         return ResponseEntity.ok(itemService.getItem(itemId));
     }
-
-    @GetMapping("/{id}/photos/{photoId}")
-    public ResponseEntity<?> getItemPhotoById(@PathVariable("id") int itemId, @PathVariable("photoId") int photoId) {
-        return ResponseEntity.ok(itemService.getItemPhoto(itemId, photoId));
-    }
 }
