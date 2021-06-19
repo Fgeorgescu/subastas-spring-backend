@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Auction {
 
+    public static final String STATUS_PENDING = "pending";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -23,12 +25,16 @@ public class Auction {
     @Column
     private String category;
 
+    @Column
+    private String status;
+
     @OneToMany(mappedBy = "auction")
     private List<RegisteredItem> items;
 
     public Auction(CreateAuctionRequest request) {
         this.title = request.getTitle();
         this.category = request.getCategory();
+        this.status = STATUS_PENDING;
     }
 
 }

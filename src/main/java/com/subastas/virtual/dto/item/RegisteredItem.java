@@ -32,13 +32,6 @@ public class RegisteredItem {
     @CollectionTable(name="imageUrls")
     private List<String> imageUrls;
 
-    @ElementCollection
-    @CollectionTable(name="photoIds")
-    private List<Integer> photoIds = new ArrayList<>();
-
-    @OneToOne(cascade = CascadeType.ALL)
-    private UserInformation owner;
-
     public RegisteredItem(RegisterItemRequest request) {
         this.title = request.getTitle();
         this.description = request.getDescription();

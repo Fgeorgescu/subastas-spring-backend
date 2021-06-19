@@ -51,4 +51,16 @@ public class AuctionService {
         return auctionRepository.findById(auctionId)
                 .orElseThrow(() -> new NotFoundException("auction", auctionId));
     }
+
+    public Auction getAuctionItemsById(int auctionId) {
+        return null;
+    }
+
+    public List<Auction> getAuctionByStatus(String status) {
+        return auctionRepository.findAllByStatus(status);
+    }
+
+    public List<Auction> getAuctions() {
+        return auctionRepository.findAll();
+    }
 }

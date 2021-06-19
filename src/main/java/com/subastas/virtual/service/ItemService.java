@@ -28,6 +28,7 @@ public class ItemService {
         return itemRepository.save(new RegisteredItem(request));
     }
 
+    // TODO: Esto queda deprecado, el item tiene un array de links al momento de crearse.
     @SneakyThrows
     public RegisteredItem attachPicture(int itemId, MultipartFile picture) {
         RegisteredItem item = itemRepository.findById(itemId)
@@ -39,9 +40,6 @@ public class ItemService {
 
         itemPhotoRepository.save(dbImage);
 
-        List<Integer> existingPhotos = item.getPhotoIds();
-        existingPhotos.add(dbImage.getId());
-        item.setPhotoIds(existingPhotos);
         itemRepository.save(item);
 
         return item;
@@ -58,13 +56,5 @@ public class ItemService {
         ));
         // TODO: eliminar hardcodeo
         return  item;
-    }
-
-    public Object getItemPhoto(int itemId, int photoId) {
-        List<Integer> photos = getItem(itemId).getPhotoIds();
-
-        ItemPhoto photo = itemPhotoRepository.findById(photoId).orElseThrow(() -> new NotFoundException("photo", photoId));
-
-        return photo.getContent();
     }
 }
