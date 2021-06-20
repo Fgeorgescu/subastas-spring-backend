@@ -52,7 +52,7 @@ public class UserService {
   public UserInformation getUser(int id) {
     //se puede agregar que sea el user o un admin.
     log.info("Buscando usuario con id {}", id);
-    return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
+    return userRepository.findById(id).orElseThrow(() -> new NotFoundException("user", id));
 
   }
 
