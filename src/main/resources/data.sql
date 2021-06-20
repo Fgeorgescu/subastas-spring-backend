@@ -17,5 +17,5 @@ INSERT INTO image_urls (registered_item_id, image_urls)
 values (1, 'https://res.cloudinary.com/dr4i78wvu/image/upload/v1624218386/initial/macbook-pro_2.jpg');
 
 -- Insert auctions
-INSERT INTO auction
+INSERT INTO auction (id, title, category, status)
     VALUES (1, 'Subasta tecno', 'CLASSIC', 'PENDING');
