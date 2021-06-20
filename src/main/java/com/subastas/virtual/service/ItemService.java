@@ -50,11 +50,6 @@ public class ItemService {
             () -> new NotFoundException("item", itemId)
         );
 
-        item.setImageUrls(Arrays.asList(
-            "https://images.unsplash.com/photo-1621569898825-ef12e7592f94?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80",
-            "http://images.unsplash.com/photo-1593642702821-c8da6771f0c6?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1778&q=80"
-        ));
-        // TODO: eliminar hardcodeo
         return  item;
     }
 }

@@ -40,13 +40,6 @@ public class ItemController {
                 .body(itemService.registerItem(request));
     }
 
-    @PostMapping("/{id}/photos")
-    public ResponseEntity<?> uploadPhoto(@PathVariable("id") int itemId, @RequestParam("image") MultipartFile file) {
-        RegisteredItem updatedItem = itemService.attachPicture(itemId, file);
-
-        return ResponseEntity.created(URI.create("/test")).body(updatedItem);
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<RegisteredItem> getItemById(@PathVariable("id") int itemId) {
         return ResponseEntity.ok(itemService.getItem(itemId));
