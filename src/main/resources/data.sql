@@ -12,9 +12,9 @@ INSERT INTO items (id, title, description, auction)
 
 -- Insert photos linked to item
 INSERT INTO image_urls (registered_item_id, image_urls)
-values (1, 'link1');
+values (1, 'https://res.cloudinary.com/dr4i78wvu/image/upload/v1624218387/initial/macbook-pro_1.jpg');
 INSERT INTO image_urls (registered_item_id, image_urls)
-values (1, 'link2');
+values (1, 'https://res.cloudinary.com/dr4i78wvu/image/upload/v1624218386/initial/macbook-pro_2.jpg');
 
 -- Insert auctions
 INSERT INTO auction
