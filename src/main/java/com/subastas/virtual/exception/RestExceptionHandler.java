@@ -1,5 +1,6 @@
 package com.subastas.virtual.exception;
 
+import com.subastas.virtual.exception.custom.NotFoundException;
 import com.subastas.virtual.exception.custom.UnauthorizedException;
 import com.subastas.virtual.exception.custom.UserAlreadyExistsException;
 import org.springframework.core.Ordered;
@@ -25,6 +26,12 @@ public class RestExceptionHandler {
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ApiError> handleUnauthorizedException(UnauthorizedException e) {
         ApiError error = new ApiError(HttpStatus.UNAUTHORIZED, e.getMessage());
+        return buildResponseEntity(error);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ApiError> handleUserAlreadyExistsException(NotFoundException e) {
+        ApiError error = new ApiError(HttpStatus.NOT_FOUND, e.getMessage());
         return buildResponseEntity(error);
     }
 
