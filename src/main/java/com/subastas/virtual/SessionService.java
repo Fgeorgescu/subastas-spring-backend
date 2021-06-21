@@ -76,8 +76,8 @@ public class SessionService {
     }
 
     public void logout(HttpSession session) {
+        log.info("Invalidating session for user: {}", getUser(session));
         session.invalidate();
-
         /*
             log.info("Logging out user {}", session.getAttribute("user"));
             session.removeAttribute("username");
