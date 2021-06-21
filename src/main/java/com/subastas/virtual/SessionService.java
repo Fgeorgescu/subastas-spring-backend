@@ -8,6 +8,8 @@ import com.subastas.virtual.exception.custom.UnauthorizedException;
 import com.subastas.virtual.repository.UserInformationRepository;
 import java.util.Arrays;
 import javax.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,6 +19,8 @@ public class SessionService {
     private static final String USER_KEY = "user";
 
     UserInformationRepository userInformationRepository;
+
+    private static final Logger log = LoggerFactory.getLogger(SessionService.class);
 
     public SessionService(UserInformationRepository userInformationRepository) {
         this.userInformationRepository = userInformationRepository;
@@ -67,6 +71,8 @@ public class SessionService {
     public void login(HttpSession session, UserInformation userInformation) {
         session.setAttribute(USERNAME_KEY, userInformation.getUsername());
         session.setAttribute(USER_KEY, userInformation);
+
+        log.info("User session created successfully for user {}", userInformation);
     }
 
     public void logout(HttpSession session) {
