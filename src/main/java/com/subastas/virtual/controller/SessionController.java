@@ -2,6 +2,7 @@ package com.subastas.virtual.controller;
 
 import com.subastas.virtual.SessionService;
 import com.subastas.virtual.dto.session.LoginCredentials;
+import com.subastas.virtual.dto.session.LoginResponse;
 import com.subastas.virtual.dto.session.ValidationCodeCredentials;
 import com.subastas.virtual.dto.user.UserInformation;
 import org.slf4j.Logger;
@@ -28,10 +29,9 @@ public class SessionController {
     public ResponseEntity<?> login(@RequestBody LoginCredentials creds, HttpSession session) {
         try {
             UserInformation userInformation = sessionService.validateCredentials(creds);
-
             sessionService.login(session, userInformation);
 
-            return ResponseEntity.ok(userInformation);
+            return ResponseEntity.ok(new LoginResponse(userInformation, session.getId()));
 
         } catch (RuntimeException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
