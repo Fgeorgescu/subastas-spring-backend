@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "items")
 public class RegisteredItem {
 
+    public static final String STATUS_PROCESSING = "PROCESSING";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -28,15 +30,23 @@ public class RegisteredItem {
     @Column
     private int auction;
 
+    @Column
+    private String status;
+
+    @Column
+    private int owner;
+
     @ElementCollection
     @CollectionTable(name="imageUrls")
     @JsonProperty("image_urls")
     private List<String> imageUrls;
 
-    public RegisteredItem(RegisterItemRequest request) {
+    public RegisteredItem(RegisterItemRequest request, UserInformation userInformation) {
         this.title = request.getTitle();
         this.description = request.getDescription();
         this.imageUrls = request.getImageUrls();
+        this.status = STATUS_PROCESSING;
+        this.owner = userInformation.getId();
     }
 
 }

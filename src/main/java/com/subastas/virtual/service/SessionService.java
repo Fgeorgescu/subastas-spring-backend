@@ -1,4 +1,4 @@
-package com.subastas.virtual;
+package com.subastas.virtual.service;
 
 import com.subastas.virtual.dto.session.LoginCredentials;
 import com.subastas.virtual.dto.session.ValidationCodeCredentials;
@@ -45,7 +45,7 @@ public class SessionService {
         throw new UnauthorizedException("Not Authorized");
     }
 
-    public UserInformation getUser(HttpSession session) {
+    public static UserInformation getUser(HttpSession session) {
         String username = (String) session.getAttribute(USERNAME_KEY);
         UserInformation user = (UserInformation) session.getAttribute(USER_KEY);
         if (username == null) {

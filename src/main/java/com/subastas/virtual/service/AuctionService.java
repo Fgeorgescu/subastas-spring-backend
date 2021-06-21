@@ -3,6 +3,7 @@ package com.subastas.virtual.service;
 import com.subastas.virtual.dto.auction.Auction;
 import com.subastas.virtual.dto.auction.http.request.CreateAuctionRequest;
 import com.subastas.virtual.dto.item.RegisteredItem;
+import com.subastas.virtual.dto.user.UserInformation;
 import com.subastas.virtual.exception.custom.NotFoundException;
 import com.subastas.virtual.exception.custom.RequestConflictException;
 import com.subastas.virtual.repository.AuctionRepository;

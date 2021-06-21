@@ -2,12 +2,15 @@ package com.subastas.virtual.controller;
 
 import com.subastas.virtual.dto.item.RegisteredItem;
 import com.subastas.virtual.dto.item.http.request.RegisterItemRequest;
+import com.subastas.virtual.dto.user.UserInformation;
 import com.subastas.virtual.service.ItemService;
+import com.subastas.virtual.service.SessionService;
 import com.subastas.virtual.utils.FileUploadUtil;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import javax.servlet.http.HttpSession;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -33,11 +36,13 @@ public class ItemController {
 
     @SneakyThrows
     @PostMapping("")
-    public ResponseEntity<?> registerItem(@RequestBody RegisterItemRequest request) {
+    public ResponseEntity<?> registerItem(@RequestBody RegisterItemRequest request, HttpSession session) {
+        UserInformation user = SessionService.getUser(session);
+
         log.info("Creating new Item record with information: {}", request);
         return ResponseEntity
                 .created(URI.create("/test"))
-                .body(itemService.registerItem(request));
+                .body(itemService.registerItem(request, user));
     }
 
     @GetMapping("/{id}")
