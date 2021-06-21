@@ -7,8 +7,8 @@ INSERT INTO users
     VALUES (3, 'test 123', 'SILVER', 323456789, 'mailsilver@test.com', 'pass', '15123453', 'user', 'active', 'testsilver', '123');
 
 -- Insert Items
-INSERT INTO items (id, title, description, auction)
-    VALUES (1, 'Macbook Pro 2018', 'Macbook pro 2018 con poco uso y mucho cuidado', 1);
+INSERT INTO items (id, title, description, auction, status, owner)
+    VALUES (1, 'Macbook Pro 2018', 'Macbook pro 2018 con poco uso y mucho cuidado', 1, 'PROCESSING', 1);
 
 -- Insert photos linked to item
 INSERT INTO image_urls (registered_item_id, image_urls)

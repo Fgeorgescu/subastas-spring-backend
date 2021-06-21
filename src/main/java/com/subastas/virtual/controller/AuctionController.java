@@ -2,9 +2,12 @@ package com.subastas.virtual.controller;
 
 import com.subastas.virtual.dto.auction.Auction;
 import com.subastas.virtual.dto.auction.http.request.CreateAuctionRequest;
+import com.subastas.virtual.dto.user.UserInformation;
 import com.subastas.virtual.service.AuctionService;
+import com.subastas.virtual.service.SessionService;
 import java.net.URI;
 import java.util.List;
+import javax.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +23,9 @@ public class AuctionController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> createNewAuction(@RequestBody CreateAuctionRequest request) {
+    public ResponseEntity<?> createNewAuction(@RequestBody CreateAuctionRequest request, HttpSession session) {
+        UserInformation user = SessionService.getUser(session);
+
         Auction auction = auctionService.createAuction(request);
 
         return ResponseEntity

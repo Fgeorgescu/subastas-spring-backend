@@ -3,7 +3,9 @@ package com.subastas.virtual.dto.user;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.subastas.virtual.dto.item.RegisteredItem;
 import com.subastas.virtual.dto.user.http.UserRegistrationRequest;
+import java.util.List;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,6 +40,10 @@ public class UserInformation {
     private int document;
     private String phone;
     private String address;
+
+    // TODO: Esto debería estar en /users/{id}/items. A futuro cambiarlo y agregar @JsonIgnore
+    @OneToMany(mappedBy = "owner")
+    private List<RegisteredItem> items;
 
     public UserInformation(String username, String mail) {
         this.username = username;

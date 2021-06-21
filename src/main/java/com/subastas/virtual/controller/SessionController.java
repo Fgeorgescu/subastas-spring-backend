@@ -1,6 +1,6 @@
 package com.subastas.virtual.controller;
 
-import com.subastas.virtual.SessionService;
+import com.subastas.virtual.service.SessionService;
 import com.subastas.virtual.dto.session.LoginCredentials;
 import com.subastas.virtual.dto.session.LoginResponse;
 import com.subastas.virtual.dto.session.ValidationCodeCredentials;

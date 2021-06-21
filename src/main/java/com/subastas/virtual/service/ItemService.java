@@ -2,6 +2,7 @@ package com.subastas.virtual.service;
 
 import com.subastas.virtual.dto.item.RegisteredItem;
 import com.subastas.virtual.dto.item.http.request.RegisterItemRequest;
+import com.subastas.virtual.dto.user.UserInformation;
 import com.subastas.virtual.exception.custom.NotFoundException;
 import com.subastas.virtual.repository.ItemRepository;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,8 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
-    public RegisteredItem registerItem(RegisterItemRequest request) {
-        return itemRepository.save(new RegisteredItem(request));
+    public RegisteredItem registerItem(RegisterItemRequest request, UserInformation user) {
+        return itemRepository.save(new RegisteredItem(request, user));
     }
 
     public RegisteredItem getItem(int itemId) {
