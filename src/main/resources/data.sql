@@ -10,12 +10,23 @@ INSERT INTO users
 INSERT INTO items (id, title, description, auction, status, owner)
     VALUES (1, 'Macbook Pro 2018', 'Macbook pro 2018 con poco uso y mucho cuidado', 1, 'PROCESSING', 1);
 
+INSERT INTO items (id, title, description, auction, status, owner)
+VALUES (2, 'Macbook Pro 2018 - 2', 'Macbook pro 2018 con poco uso y mucho cuidado', 2, 'PROCESSING', 3);
+
 -- Insert photos linked to item
 INSERT INTO image_urls (registered_item_id, image_urls)
 values (1, 'https://res.cloudinary.com/dr4i78wvu/image/upload/v1624218387/initial/macbook-pro_1.jpg');
 INSERT INTO image_urls (registered_item_id, image_urls)
 values (1, 'https://res.cloudinary.com/dr4i78wvu/image/upload/v1624218386/initial/macbook-pro_2.jpg');
 
+INSERT INTO image_urls (registered_item_id, image_urls)
+values (2, 'https://res.cloudinary.com/dr4i78wvu/image/upload/v1624218387/initial/macbook-pro_1.jpg');
+INSERT INTO image_urls (registered_item_id, image_urls)
+values (2, 'https://res.cloudinary.com/dr4i78wvu/image/upload/v1624218386/initial/macbook-pro_2.jpg');
+
 -- Insert auctions
 INSERT INTO auction (id, title, category, status)
     VALUES (1, 'Subasta tecno', 'CLASSIC', 'PENDING');
+
+INSERT INTO auction (id, title, category, status)
+VALUES (2, 'Subasta tecno - 2', 'GOLD', 'PENDING');
