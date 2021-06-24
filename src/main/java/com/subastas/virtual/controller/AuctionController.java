@@ -2,6 +2,7 @@ package com.subastas.virtual.controller;
 
 import com.subastas.virtual.dto.auction.Auction;
 import com.subastas.virtual.dto.auction.http.request.CreateAuctionRequest;
+import com.subastas.virtual.dto.item.RegisteredItem;
 import com.subastas.virtual.dto.user.UserInformation;
 import com.subastas.virtual.service.AuctionService;
 import com.subastas.virtual.service.SessionService;
@@ -53,8 +54,8 @@ public class AuctionController {
     }
 
     @GetMapping("/{id}/items")
-    public ResponseEntity<Auction> getAuctionItems(@PathVariable("id") int auctionId) {
-        Auction auction = auctionService.getAuctionItemsById(auctionId);
+    public ResponseEntity<List<RegisteredItem>> getAuctionItems(@PathVariable("id") int auctionId) {
+        List<RegisteredItem> auction = auctionService.getAuctionItemsById(auctionId);
 
         return ResponseEntity.ok(auction);
     }

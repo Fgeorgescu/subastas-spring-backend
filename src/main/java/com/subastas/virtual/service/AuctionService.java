@@ -62,8 +62,8 @@ public class AuctionService {
                 .orElseThrow(() -> new NotFoundException("auction", auctionId));
     }
 
-    public Auction getAuctionItemsById(int auctionId) {
-        return null;
+    public List<RegisteredItem> getAuctionItemsById(int auctionId) {
+        return itemRepository.findAllByAuction(auctionId);
     }
 
     public List<Auction> getAuctionByStatus(String status) {
