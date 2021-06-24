@@ -78,11 +78,11 @@ values (10, 'https://res.cloudinary.com/dr4i78wvu/image/upload/v1624488562/initi
 
 -- Insert auctions
 INSERT INTO auction (id, title, category, status)
-    VALUES (1, 'Subasta tecno', 'CLASSIC', 'PENDING');
+    VALUES (1, 'Subasta tecno', 'Común', 'PENDING');
 
 INSERT INTO auction (id, title, category, status)
-VALUES (2, 'Deportes', 'GOLD', 'PENDING');
+VALUES (2, 'Deportes', 'Oro', 'PENDING');
 
 
 INSERT INTO auction (id, title, category, status)
-VALUES (3, 'Cosas para el hogar', 'SILVER', 'PENDING');
+VALUES (3, 'Cosas para el hogar', 'Plata', 'PENDING');
