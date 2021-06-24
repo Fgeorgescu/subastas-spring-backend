@@ -85,4 +85,4 @@ VALUES (2, 'Deportes', 'GOLD', 'PENDING');
 
 
 INSERT INTO auction (id, title, category, status)
-VALUES (3, 'Cosas para el hogar', 'Silver', 'PENDING');
+VALUES (3, 'Cosas para el hogar', 'SILVER', 'PENDING');
