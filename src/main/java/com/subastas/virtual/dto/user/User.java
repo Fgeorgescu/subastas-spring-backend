@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
+import com.subastas.virtual.dto.auction.Auction;
 import com.subastas.virtual.dto.item.RegisteredItem;
 import com.subastas.virtual.dto.user.http.UserRegistrationRequest;
 import java.util.List;
@@ -47,6 +48,9 @@ public class UserInformation {
     // TODO: Esto debería estar en /users/{id}/items. A futuro cambiarlo y agregar @JsonIgnore
     @OneToMany(mappedBy = "owner")
     private List<RegisteredItem> items;
+
+    @ManyToMany(targetEntity = Auction.class,cascade = CascadeType.ALL )
+    private List<Auction> roles;
 
     public UserInformation(String username, String mail) {
         this.username = username;
