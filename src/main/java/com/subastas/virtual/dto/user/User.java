@@ -3,13 +3,12 @@ package com.subastas.virtual.dto.user;
 import com.fasterxml.jackson.annotation.*;
 import com.google.common.base.Strings;
 import com.subastas.virtual.dto.auction.Auction;
-import com.subastas.virtual.dto.item.RegisteredItem;
+import com.subastas.virtual.dto.bid.BidLog;
+import com.subastas.virtual.dto.item.Item;
 import com.subastas.virtual.dto.user.http.UserRegistrationRequest;
 import java.util.List;
-import java.util.Set;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import javax.persistence.*;
@@ -45,11 +44,15 @@ public class User {
 
     @JsonIgnore
     @OneToMany(mappedBy = "owner")
-    private List<RegisteredItem> items;
+    private List<Item> items;
 
     @JsonIgnore
     @ManyToMany(targetEntity = Auction.class,cascade = CascadeType.ALL )
     private List<Auction> auctions;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "bidder")
+    private List<BidLog> bids;
 
     public User(String username, String mail) {
         this.username = username;

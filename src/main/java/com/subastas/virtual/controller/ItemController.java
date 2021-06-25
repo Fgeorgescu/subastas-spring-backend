@@ -1,8 +1,10 @@
 package com.subastas.virtual.controller;
 
-import com.subastas.virtual.dto.item.RegisteredItem;
+import com.subastas.virtual.dto.bid.http.BidRequest;
+import com.subastas.virtual.dto.item.Item;
 import com.subastas.virtual.dto.item.http.request.RegisterItemRequest;
 import com.subastas.virtual.dto.user.User;
+import com.subastas.virtual.service.BiddingService;
 import com.subastas.virtual.service.ItemService;
 import com.subastas.virtual.service.SessionService;
 import java.net.URI;
@@ -21,9 +23,11 @@ public class ItemController {
     private final Logger log = LoggerFactory.getLogger(ItemController.class);
 
     private final ItemService itemService;
+    private final BiddingService biddingService;
 
-    public ItemController(ItemService itemService) {
+    public ItemController(ItemService itemService, BiddingService biddingService) {
         this.itemService = itemService;
+        this.biddingService = biddingService;
     }
 
     @SneakyThrows
@@ -38,7 +42,16 @@ public class ItemController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RegisteredItem> getItemById(@PathVariable("id") int itemId) {
+    public ResponseEntity<Item> getItemById(@PathVariable("id") int itemId) {
         return ResponseEntity.ok(itemService.getItem(itemId));
+    }
+
+    // Biddings
+    @PostMapping("/{id}/bids")
+    public ResponseEntity<?> processBid(@PathVariable("id") int itemId, @RequestBody BidRequest bid, HttpSession session) {
+        User user = SessionService.getUser(session);
+        biddingService.processBid(bid, itemId, user.getId());
+
+        return ResponseEntity.ok().build();
     }
 }
