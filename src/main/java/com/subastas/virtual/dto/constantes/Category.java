@@ -1,2 +1,8 @@
-package com.subastas.virtual.dto;public enum Category {
+package com.subastas.virtual.dto.constantes;
+
+public enum Category {
+
+  COMUN,
+  ORO
+
 }

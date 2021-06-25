@@ -1,6 +1,7 @@
 package com.subastas.virtual.exception;
 
 import com.subastas.virtual.exception.custom.NotFoundException;
+import com.subastas.virtual.exception.custom.RequestConflictException;
 import com.subastas.virtual.exception.custom.UnauthorizedException;
 import com.subastas.virtual.exception.custom.UserAlreadyExistsException;
 import org.springframework.core.Ordered;
@@ -16,6 +17,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class RestExceptionHandler {
+
+    @ExceptionHandler(RequestConflictException.class)
+    public ResponseEntity<ApiError> handleRequestConflictException(RequestConflictException e) {
+        ApiError error = new ApiError(HttpStatus.CONFLICT, e.getMessage());
+        return buildResponseEntity(error);
+    }
 
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<ApiError> handleUserAlreadyExistsException(UserAlreadyExistsException e) {
@@ -35,12 +42,12 @@ public class RestExceptionHandler {
         return buildResponseEntity(error);
     }
 
-    @ExceptionHandler({Exception.class})
+    /*@ExceptionHandler({Exception.class})
     @Order()
     public ResponseEntity<ApiError> handleUnknownException(Exception e) {
         ApiError error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         return buildResponseEntity(error);
-    }
+    }*/
 
     private ResponseEntity<ApiError> buildResponseEntity(ApiError apiError) {
         HttpHeaders responseHeaders = new HttpHeaders();

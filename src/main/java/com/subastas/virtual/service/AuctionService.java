@@ -3,13 +3,15 @@ package com.subastas.virtual.service;
 import com.subastas.virtual.dto.auction.Auction;
 import com.subastas.virtual.dto.auction.http.request.CreateAuctionRequest;
 import com.subastas.virtual.dto.item.RegisteredItem;
-import com.subastas.virtual.dto.user.UserInformation;
+import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.exception.custom.NotFoundException;
 import com.subastas.virtual.exception.custom.RequestConflictException;
 import com.subastas.virtual.repository.AuctionRepository;
 import com.subastas.virtual.repository.ItemRepository;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,10 +19,16 @@ public class AuctionService {
 
     AuctionRepository auctionRepository;
     ItemRepository itemRepository;
+    UserService userService;
+    Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public AuctionService(AuctionRepository auctionRepository, ItemRepository itemRepository) {
+
+    public AuctionService(AuctionRepository auctionRepository,
+                          ItemRepository itemRepository,
+                          UserService userService) {
         this.auctionRepository = auctionRepository;
         this.itemRepository = itemRepository;
+        this.userService = userService;
     }
 
     public Auction createAuction(CreateAuctionRequest request) {
@@ -72,5 +80,18 @@ public class AuctionService {
 
     public List<Auction> getAuctions() {
         return auctionRepository.findAll();
+    }
+
+  public void addParticipant(int auctionId, User userCached) {
+
+        Auction auction = getAuctionById(auctionId);
+        userService.addAuction(auction, userCached.getId());
+  }
+
+    public List<User> getUsers(int auctionId) {
+        Auction auction = auctionRepository.findById(auctionId)
+            .orElseThrow(() -> new NotFoundException("auction", auctionId));
+
+        return auction.getUsers();
     }
 }

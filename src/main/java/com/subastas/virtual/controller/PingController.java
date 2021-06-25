@@ -1,7 +1,7 @@
 package com.subastas.virtual.controller;
 
 import com.subastas.virtual.service.SessionService;
-import com.subastas.virtual.dto.user.UserInformation;
+import com.subastas.virtual.dto.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ public class PingController {
 
     @GetMapping("/ping")
     public ResponseEntity<?> ping(HttpSession session) {
-        UserInformation user = sessionService.getUser(session);
+        User user = sessionService.getUser(session);
 
         return ResponseEntity.ok(String.format("Usuario %s. Pong :D", user.getUsername()));
     }

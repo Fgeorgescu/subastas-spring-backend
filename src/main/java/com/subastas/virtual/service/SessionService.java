@@ -2,7 +2,7 @@ package com.subastas.virtual.service;
 
 import com.subastas.virtual.dto.session.LoginCredentials;
 import com.subastas.virtual.dto.session.ValidationCodeCredentials;
-import com.subastas.virtual.dto.user.UserInformation;
+import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.exception.custom.NotFoundException;
 import com.subastas.virtual.exception.custom.UnauthorizedException;
 import com.subastas.virtual.repository.UserInformationRepository;
@@ -26,8 +26,8 @@ public class SessionService {
         this.userInformationRepository = userInformationRepository;
     }
 
-    public UserInformation validateCredentials(LoginCredentials creds) {
-        UserInformation aux = userInformationRepository.findByUsername(creds.getUsername()).orElseThrow();
+    public User validateCredentials(LoginCredentials creds) {
+        User aux = userInformationRepository.findByUsername(creds.getUsername()).orElseThrow();
 
         if (aux.getPassword() == null) {
             throw new UnauthorizedException("Account not validated");
@@ -38,8 +38,8 @@ public class SessionService {
         throw new UnauthorizedException("Not Authorized");
     }
 
-    public UserInformation validateValidationCode(ValidationCodeCredentials creds) {
-        UserInformation user = userInformationRepository.findByMail(creds.getMail())
+    public User validateValidationCode(ValidationCodeCredentials creds) {
+        User user = userInformationRepository.findByMail(creds.getMail())
             .orElseThrow(() -> new NotFoundException("mail", creds.getMail()));
 
         if ("ADMIN".equals(creds.getValidationCode()) ||
@@ -49,10 +49,10 @@ public class SessionService {
         throw new UnauthorizedException("Not Authorized");
     }
 
-    public static UserInformation getUser(HttpSession session) {
+    public static User getUser(HttpSession session) {
         String username = (String) session.getAttribute(USERNAME_KEY);
-        UserInformation user = (UserInformation) session.getAttribute(USER_KEY);
-        if (username == null) {
+        User user = (User) session.getAttribute(USER_KEY);
+        if (username == null || user== null) {
             throw new UnauthorizedException("No session found");
         }
 
@@ -60,7 +60,7 @@ public class SessionService {
     }
 
     public void hasRole(HttpSession session, String... roles) {
-        UserInformation user = getUser(session);
+        User user = getUser(session);
         if (Arrays.stream(roles).noneMatch(r -> r.equalsIgnoreCase(user.getRole()))) {
             throw new UnauthorizedException(
                     String.format("User %s is not authorized to perform this action",
@@ -68,11 +68,11 @@ public class SessionService {
         }
     }
 
-    public void login(HttpSession session, UserInformation userInformation) {
-        session.setAttribute(USERNAME_KEY, userInformation.getUsername());
-        session.setAttribute(USER_KEY, userInformation);
+    public void login(HttpSession session, User user) {
+        session.setAttribute(USERNAME_KEY, user.getUsername());
+        session.setAttribute(USER_KEY, user);
 
-        log.info("User session created successfully for user {}", userInformation);
+        log.info("User session created successfully for user {}", user);
     }
 
     public void logout(HttpSession session) {

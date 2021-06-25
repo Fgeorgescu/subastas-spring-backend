@@ -1,14 +1,15 @@
 package com.subastas.virtual.controller;
 
-import com.subastas.virtual.dto.user.UserInformation;
+import com.subastas.virtual.dto.auction.Auction;
+import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.dto.user.http.UserRegistrationRequest;
 import com.subastas.virtual.dto.user.http.request.CreatePasswordRequest;
 import com.subastas.virtual.exception.custom.UnauthorizedException;
 import com.subastas.virtual.service.SessionService;
 import com.subastas.virtual.service.UserService;
 import java.net.URI;
+import java.util.List;
 import javax.servlet.http.HttpSession;
-import org.apache.catalina.manager.util.SessionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class UserController {
     public ResponseEntity<?> createUser(@RequestBody UserRegistrationRequest request) {
         log.info("Creando usuario con parametros {}", request);
 
-        UserInformation user = userService.createUser(request);
+        User user = userService.createUser(request);
         return ResponseEntity.created(URI.create("/users/" + user.getId())).body(user);
     }
 
@@ -40,7 +41,7 @@ public class UserController {
 
         // TODO: Agregar validación del usuario con el ID y la sesión.
 
-        UserInformation user = userService.updatePassword(id, request.getPassword());
+        User user = userService.updatePassword(id, request.getPassword());
         return ResponseEntity.ok(user);
     }
 
@@ -52,16 +53,28 @@ public class UserController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<?> updateUser(@PathVariable("id") int id,
-                                        @RequestBody UserInformation userInformation,
+                                        @RequestBody User user,
                                         HttpSession httpSession) {
-        UserInformation originalUser = SessionService.getUser(httpSession);
+        User originalUser = SessionService.getUser(httpSession);
 
         if (originalUser.getId() != id) {
             log.error("User {} not authorized to edit user {}", id, originalUser.getId());
             throw new UnauthorizedException("User not authorized to do this action");
         }
 
-        log.info("Actualizando info del usuario {} con la data {}", id, userInformation);
-        return ResponseEntity.ok().body(userService.updateUser(id, userInformation));
+        log.info("Actualizando info del usuario {} con la data {}", id, user);
+        return ResponseEntity.ok().body(userService.updateUser(id, user));
+    }
+
+    @GetMapping("/{id}/auctions")
+    public ResponseEntity<List<Auction>> getAuctions(@PathVariable("id") int userId, HttpSession session) {
+        User userSession = SessionService.getUser(session);
+
+        if (userId != userSession.getId()) {
+            throw new UnauthorizedException("User can not access this resource");
+        }
+
+        List<Auction> auctions = userService.getAuctions(userId);
+        return ResponseEntity.ok(auctions);
     }
 }

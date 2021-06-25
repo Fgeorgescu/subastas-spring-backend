@@ -1,10 +1,13 @@
 package com.subastas.virtual.service;
 
-import com.subastas.virtual.dto.user.UserInformation;
+import com.subastas.virtual.dto.auction.Auction;
+import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.dto.user.http.UserRegistrationRequest;
 import com.subastas.virtual.exception.custom.NotFoundException;
+import com.subastas.virtual.exception.custom.RequestConflictException;
 import com.subastas.virtual.exception.custom.UserAlreadyExistsException;
 import com.subastas.virtual.repository.UserInformationRepository;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -28,10 +31,10 @@ public class UserService {
     this.emailSender = emailSender;
   }
 
-  public UserInformation createUser(UserRegistrationRequest request) {
+  public User createUser(UserRegistrationRequest request) {
     // TODO: Validar unicidad del nombre de usuario
     // Todo: Debería ser una transacción
-    UserInformation user = new UserInformation(request);
+    User user = new User(request);
 
     try {
       user = userRepository.save(user);
@@ -49,17 +52,17 @@ public class UserService {
     return user;
   }
 
-  public UserInformation getUser(int id) {
+  public User getUser(int id) {
     //se puede agregar que sea el user o un admin.
     log.info("Buscando usuario con id {}", id);
     return userRepository.findById(id).orElseThrow(() -> new NotFoundException("user", id));
 
   }
 
-  public UserInformation updatePassword(int id, String password) {
+  public User updatePassword(int id, String password) {
     log.info("Buscando usuario con id {}", id);
 
-    UserInformation user = userRepository.findById(id)
+    User user = userRepository.findById(id)
         .orElseThrow(() -> new NotFoundException("user", id));
 
     log.info("usuario con id {}: {}", id, user);
@@ -95,11 +98,27 @@ public class UserService {
     emailSender.send(message);
   }
 
-  public UserInformation updateUser(int id, UserInformation newUserInformation) {
-    UserInformation user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("user", id));
+  public User updateUser(int id, User newUser) {
+    User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("user", id));
 
-    user.update(newUserInformation);
+    user.update(newUser);
 
     return userRepository.save(user);
+  }
+
+  public void addAuction(Auction auction, int id) {
+    User user = getUser(id);
+    if (user.getAuctions().stream().anyMatch(a -> a.getId() == auction.getId())) {
+      throw new RequestConflictException("User already registered in the auction");
+    }
+
+    user.getAuctions().add(auction);
+    userRepository.save(user);
+  }
+
+  public List<Auction> getAuctions(int userId) {
+    User actualUser = getUser(userId);
+
+    return actualUser.getAuctions();
   }
 }

@@ -1,20 +1,16 @@
 package com.subastas.virtual.dto.user;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.google.common.base.Strings;
 import com.subastas.virtual.dto.auction.Auction;
 import com.subastas.virtual.dto.item.RegisteredItem;
 import com.subastas.virtual.dto.user.http.UserRegistrationRequest;
 import java.util.List;
+import java.util.Set;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.ToString;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.hibernate.annotations.Columns;
 
 import javax.persistence.*;
 
@@ -23,7 +19,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Table(name = "users")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserInformation {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,20 +42,23 @@ public class UserInformation {
     private String address;
 
     // TODO: Esto debería estar en /users/{id}/items. A futuro cambiarlo y agregar @JsonIgnore
+
+    @JsonIgnore
     @OneToMany(mappedBy = "owner")
     private List<RegisteredItem> items;
 
+    @JsonIgnore
     @ManyToMany(targetEntity = Auction.class,cascade = CascadeType.ALL )
-    private List<Auction> roles;
+    private List<Auction> auctions;
 
-    public UserInformation(String username, String mail) {
+    public User(String username, String mail) {
         this.username = username;
         this.mail = mail;
         this.validationCode = RandomStringUtils.randomAlphabetic(5);
         this.status = "pending";
     }
 
-    public UserInformation(UserRegistrationRequest request) {
+    public User(UserRegistrationRequest request) {
         this.username = request.getUsername();
         this.mail = request.getMail();
         this.validationCode = RandomStringUtils.randomAlphabetic(5);
@@ -70,7 +69,7 @@ public class UserInformation {
         this.address = request.getAddress();
     }
 
-    public void update(UserInformation i) {
+    public void update(User i) {
         this.status = Strings.isNullOrEmpty(i.status) ? this.status : i.status;
         this.category = Strings.isNullOrEmpty(i.category) ? this.category : i.category;
         this.phone = Strings.isNullOrEmpty(i.phone) ? this.phone : i.phone;
