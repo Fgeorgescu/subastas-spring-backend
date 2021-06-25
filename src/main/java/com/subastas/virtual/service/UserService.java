@@ -1,6 +1,8 @@
 package com.subastas.virtual.service;
 
 import com.subastas.virtual.dto.auction.Auction;
+import com.subastas.virtual.dto.bid.BidLog;
+import com.subastas.virtual.dto.item.Item;
 import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.dto.user.http.UserRegistrationRequest;
 import com.subastas.virtual.exception.custom.NotFoundException;
@@ -8,6 +10,7 @@ import com.subastas.virtual.exception.custom.RequestConflictException;
 import com.subastas.virtual.exception.custom.UserAlreadyExistsException;
 import com.subastas.virtual.repository.UserInformationRepository;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -120,5 +123,15 @@ public class UserService {
     User actualUser = getUser(userId);
 
     return actualUser.getAuctions();
+  }
+
+  public List<BidLog> getBidsFotItem(int userId, int itemId) {
+    Item item = getUser(userId).getItems().stream()
+        .filter(i -> i.getId() == itemId).findFirst()
+        .orElseThrow(() -> new NotFoundException("Could not find item in user history"));
+
+    // Si sacamos este .filter devolvemos toda la historia
+    //return item.getBiddings().stream().filter(bid -> bid.getBidder() == userId).collect(Collectors.toList());
+    return item.getBiddings();
   }
 }

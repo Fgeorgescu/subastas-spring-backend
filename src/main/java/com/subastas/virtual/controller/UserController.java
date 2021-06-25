@@ -1,6 +1,7 @@
 package com.subastas.virtual.controller;
 
 import com.subastas.virtual.dto.auction.Auction;
+import com.subastas.virtual.dto.bid.BidLog;
 import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.dto.user.http.UserRegistrationRequest;
 import com.subastas.virtual.dto.user.http.request.CreatePasswordRequest;
@@ -76,5 +77,19 @@ public class UserController {
 
         List<Auction> auctions = userService.getAuctions(userId);
         return ResponseEntity.ok(auctions);
+    }
+
+    @GetMapping("/{userId}/items/{itemId}/bids")
+    public ResponseEntity<List<BidLog>> getBidsForItem(@PathVariable("userId") int userId,
+                                                       @PathVariable("itemId") int itemId,
+                                                       HttpSession session) {
+        User userSession = SessionService.getUser(session);
+        if (userId != userSession.getId()) {
+            throw new UnauthorizedException("User can not access this resource");
+        }
+
+        List<BidLog> logs = userService.getBidsFotItem(userId, itemId);
+
+        return ResponseEntity.ok(logs);
     }
 }
