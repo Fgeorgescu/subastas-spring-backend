@@ -2,7 +2,9 @@ package com.subastas.virtual.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import com.subastas.virtual.dto.item.RegisteredItem;
 import com.subastas.virtual.dto.user.http.UserRegistrationRequest;
 import java.util.List;
@@ -19,6 +21,7 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @Table(name = "users")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserInformation {
 
     @Id
@@ -61,5 +64,13 @@ public class UserInformation {
         this.document = request.getDocument();
         this.phone = request.getPhone();
         this.address = request.getAddress();
+    }
+
+    public void update(UserInformation i) {
+        this.status = Strings.isNullOrEmpty(i.status) ? this.status : i.status;
+        this.category = Strings.isNullOrEmpty(i.category) ? this.category : i.category;
+        this.phone = Strings.isNullOrEmpty(i.phone) ? this.phone : i.phone;
+        this.address = Strings.isNullOrEmpty(i.address) ? this.address : i.address;
+        this.password = Strings.isNullOrEmpty(i.password) ? this.password : i.password;
     }
 }

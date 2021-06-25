@@ -94,4 +94,12 @@ public class UserService {
     message.setText(text);
     emailSender.send(message);
   }
+
+  public UserInformation updateUser(int id, UserInformation newUserInformation) {
+    UserInformation user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("user", id));
+
+    user.update(newUserInformation);
+
+    return userRepository.save(user);
+  }
 }
