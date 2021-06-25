@@ -1,6 +1,6 @@
 package com.subastas.virtual.service;
 
-import com.subastas.virtual.dto.item.RegisteredItem;
+import com.subastas.virtual.dto.item.Item;
 import com.subastas.virtual.dto.item.http.request.RegisterItemRequest;
 import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.exception.custom.NotFoundException;
@@ -16,15 +16,18 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
-    public RegisteredItem registerItem(RegisterItemRequest request, User user) {
-        return itemRepository.save(new RegisteredItem(request, user));
+    public Item registerItem(RegisterItemRequest request, User user) {
+        return itemRepository.save(new Item(request, user));
     }
 
-    public RegisteredItem getItem(int itemId) {
-        RegisteredItem item = itemRepository.findById(itemId).orElseThrow(
+    public Item getItem(int itemId) {
+
+        return itemRepository.findById(itemId).orElseThrow(
             () -> new NotFoundException("item", itemId)
         );
-
-        return  item;
     }
+
+  public Item saveItem(Item item) {
+        return itemRepository.save(item);
+  }
 }

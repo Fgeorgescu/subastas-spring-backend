@@ -1,18 +1,21 @@
 package com.subastas.virtual.dto.item;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.subastas.virtual.dto.bid.BidLog;
 import com.subastas.virtual.dto.item.http.request.RegisterItemRequest;
 import com.subastas.virtual.dto.user.User;
 import java.util.List;
 import javax.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Data
 @NoArgsConstructor
 @Table(name = "items")
-public class RegisteredItem {
+public class Item {
 
     public static final String STATUS_PROCESSING = "PROCESSING";
 
@@ -40,7 +43,18 @@ public class RegisteredItem {
     @JsonProperty("image_urls")
     private List<String> imageUrls;
 
-    public RegisteredItem(RegisterItemRequest request, User user) {
+    @JsonIgnore
+    @ToString.Exclude
+    @OneToMany(mappedBy = "itemId")
+    private List<BidLog> biddings;
+
+    @Column
+    private float basePrice;
+
+    @Column
+    private float currentPrice;
+
+    public Item(RegisterItemRequest request, User user) {
         this.title = request.getTitle();
         this.description = request.getDescription();
         this.imageUrls = request.getImageUrls();

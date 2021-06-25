@@ -2,11 +2,10 @@ package com.subastas.virtual.dto.auction;
 
 import com.fasterxml.jackson.annotation.*;
 import com.subastas.virtual.dto.auction.http.request.CreateAuctionRequest;
-import com.subastas.virtual.dto.constantes.Category;
-import com.subastas.virtual.dto.item.RegisteredItem;
+import com.subastas.virtual.dto.bid.BidLog;
+import com.subastas.virtual.dto.item.Item;
 import com.subastas.virtual.dto.user.User;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,7 +35,7 @@ public class Auction {
     private String status;
 
     @OneToMany(mappedBy = "auction")
-    private List<RegisteredItem> items;
+    private List<Item> items;
 
     @JsonIgnore
     @ToString.Exclude

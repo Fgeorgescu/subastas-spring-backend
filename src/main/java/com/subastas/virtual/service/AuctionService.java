@@ -2,7 +2,7 @@ package com.subastas.virtual.service;
 
 import com.subastas.virtual.dto.auction.Auction;
 import com.subastas.virtual.dto.auction.http.request.CreateAuctionRequest;
-import com.subastas.virtual.dto.item.RegisteredItem;
+import com.subastas.virtual.dto.item.Item;
 import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.exception.custom.NotFoundException;
 import com.subastas.virtual.exception.custom.RequestConflictException;
@@ -36,7 +36,7 @@ public class AuctionService {
         auction = auctionRepository.save(auction);
 
         // Obtenemos los items que vamos a usar
-        List<RegisteredItem> items = itemRepository.findAllById(request.getItemIds());
+        List<Item> items = itemRepository.findAllById(request.getItemIds());
 
         // Validamos que todos los items existan.
         if (items.size() != request.getItemIds().size()) {
@@ -46,14 +46,14 @@ public class AuctionService {
 
         // Validamos que los items no estén asignados a otra subasta
         // Me quedo con los que id auction id != 0 -> Están en una subasta
-        List<RegisteredItem> assignedItems = items.stream().filter(i -> i.getAuction() != 0 ).collect(Collectors.toList());
+        List<Item> assignedItems = items.stream().filter(i -> i.getAuction() != 0 ).collect(Collectors.toList());
         if (!assignedItems.isEmpty()) { // La lista debería ser vacia
             auctionRepository.delete(auction); // Rollback
             throw new RequestConflictException(String.format("Items %s already assigned to an auction", assignedItems));
         }
 
         // Actualizamos el id de la subasta en los items
-        for(RegisteredItem i : items) {
+        for(Item i : items) {
             i.setAuction(auction.getId());
         }
         // Asignamos los items a la subasta
@@ -70,7 +70,7 @@ public class AuctionService {
                 .orElseThrow(() -> new NotFoundException("auction", auctionId));
     }
 
-    public List<RegisteredItem> getAuctionItemsById(int auctionId) {
+    public List<Item> getAuctionItemsById(int auctionId) {
         return itemRepository.findAllByAuction(auctionId);
     }
 
