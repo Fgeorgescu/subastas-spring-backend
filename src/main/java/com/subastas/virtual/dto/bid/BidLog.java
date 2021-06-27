@@ -1,6 +1,5 @@
 package com.subastas.virtual.dto.bid;
 
-import com.subastas.virtual.dto.user.User;
 import javax.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

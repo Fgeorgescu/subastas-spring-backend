@@ -6,10 +6,7 @@ import com.subastas.virtual.dto.item.Item;
 import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.exception.custom.NotFoundException;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import javax.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -48,6 +45,11 @@ public class Auction {
     @ToString.Exclude
     private Timer timer = new Timer();
 
+    @Transient
+    @JsonIgnore
+    @ToString.Exclude
+    private TimerTask startTask;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -65,21 +67,25 @@ public class Auction {
     private LocalDateTime activeUntil;
 
     @OneToMany(mappedBy = "auction")
-    private List<Item> items;
+    private List<Item> items = new ArrayList<>();
 
     @JsonIgnore
     @ToString.Exclude
     @ManyToMany(targetEntity = User.class, mappedBy = "auctions", cascade = CascadeType.ALL)
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
 
     @Column()
     private Integer activeItem = -1;
+
+    @Column
+    private LocalDateTime startTime;
 
     public Auction(CreateAuctionRequest request) {
         this.title = request.getTitle();
         this.category = request.getCategory();
         this.status = STATUS_PENDING;
         this.category = CATEGORY_COMUN;
+        this.startTime = request.getStartingTime();
     }
 
     public void startAuction() {
@@ -97,7 +103,7 @@ public class Auction {
     public void activateNextItem() {
 
         // Finalizamos el item actual si existe
-        if (activeItem != null) {
+        if (activeItem != null && activeItem != -1) {
             log.info("Finalizando el item: {}", activeItem);
             Item item = this.getItems().stream()
                 .filter(i -> i.getId() == activeItem).findFirst()

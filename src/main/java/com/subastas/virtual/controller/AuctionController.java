@@ -30,11 +30,22 @@ public class AuctionController {
         this.auctionService = auctionService;
     }
 
+    /**
+     * En caso de no tener un auto activate, podemos activar una subasta por este endpoint
+     * @param auctionId
+     * @return
+     */
     @GetMapping("/{id}/activate")
     public ResponseEntity<Auction> activateAuction(@PathVariable("id") int auctionId) {
         return ResponseEntity.ok(auctionService.startAuction(auctionId));
     }
 
+    /**
+     * Creamos una nueva subaste. Si se indica una fecha de inicio, la subasta comienza automáticamente
+     * @param request
+     * @param session
+     * @return
+     */
     @PostMapping("")
     public ResponseEntity<?> createNewAuction(@RequestBody CreateAuctionRequest request, HttpSession session) {
         User user = SessionService.getUser(session);
@@ -78,6 +89,12 @@ public class AuctionController {
         return ResponseEntity.ok(users);
     }
 
+    /**
+     * Vincula la subasta con el usuario al que corresponde la sesión
+     * @param auctionId
+     * @param session
+     * @return
+     */
     @PutMapping("/{id}")
     public ResponseEntity<?> addAuctionToFavorite(@PathVariable("id") int auctionId, HttpSession session) {
         User user = SessionService.getUser(session);

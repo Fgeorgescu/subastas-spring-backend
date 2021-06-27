@@ -8,7 +8,11 @@ import com.subastas.virtual.exception.custom.NotFoundException;
 import com.subastas.virtual.exception.custom.RequestConflictException;
 import com.subastas.virtual.repository.AuctionRepository;
 import com.subastas.virtual.repository.ItemRepository;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +24,12 @@ public class AuctionService {
     AuctionRepository auctionRepository;
     ItemRepository itemRepository;
     UserService userService;
+
+    /**
+     * Handles auctions auto-start.
+     */
+    Timer auctionStarterTimer = new Timer();
     Logger log = LoggerFactory.getLogger(this.getClass());
-    // Pruebo si necesito la instancia viva para que active el timer.
-    private Auction activeAuction;
 
 
     public AuctionService(AuctionRepository auctionRepository,
@@ -36,6 +43,10 @@ public class AuctionService {
     public Auction createAuction(CreateAuctionRequest request) {
         Auction auction = new Auction(request);
         auction = auctionRepository.save(auction);
+
+        if (auction.getItems().isEmpty()) {
+            throw new RequestConflictException("There should be at least one item in an auction");
+        }
 
         // Obtenemos los items que vamos a usar
         List<Item> items = itemRepository.findAllById(request.getItemIds());
@@ -62,8 +73,20 @@ public class AuctionService {
         auction.setItems(items);
 
         // Persistimos la subasta y devolvemos la nueva entidad
-        auction = auctionRepository.save(auction);
         itemRepository.saveAll(items);
+
+        if (auction.getStartTime() != null) {
+            if (auction.getStartTime().compareTo(LocalDateTime.now()) < 0) {
+                throw new RequestConflictException("Start time can not be a past time");
+            }
+
+            log.info("Setting auction auto start");
+            auction.setStartTask(new CronAuctionTask(auction));
+
+            auctionStarterTimer.schedule(auction.getStartTask(), Timestamp.valueOf(auction.getStartTime()));
+        }
+
+        auction = auctionRepository.save(auction);
         return auction;
     }
 
@@ -99,9 +122,13 @@ public class AuctionService {
 
     public Auction startAuction(int auctionId) {
         Auction auction = getAuctionById(auctionId);
+
+        if (auction.getStartTask() != null) {
+            auction.getStartTask().cancel();
+        }
+
         auction.startAuction();
-        log.info("persisting active auction");
-        this.activeAuction = auction;
+
         return auctionRepository.save(auction);
     }
 
@@ -119,5 +146,17 @@ public class AuctionService {
         return auction;
     }
 
+    class CronAuctionTask extends TimerTask {
+        private final Auction auction;
 
+        public CronAuctionTask(Auction auction) {
+            this.auction = auction;
+        }
+
+        @Override
+        public void run() {
+            log.info("Automatically starting auction: {}", auction.getId());
+            auction.startAuction();
+        }
+    }
 }
