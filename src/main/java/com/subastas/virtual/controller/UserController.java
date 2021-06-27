@@ -2,6 +2,7 @@ package com.subastas.virtual.controller;
 
 import com.subastas.virtual.dto.auction.Auction;
 import com.subastas.virtual.dto.bid.BidLog;
+import com.subastas.virtual.dto.payment.PaymentMethod;
 import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.dto.user.http.UserRegistrationRequest;
 import com.subastas.virtual.dto.user.http.request.CreatePasswordRequest;
@@ -53,27 +54,20 @@ public class UserController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable("id") int id,
+    public ResponseEntity<?> updateUser(@PathVariable("id") int userId,
                                         @RequestBody User user,
-                                        HttpSession httpSession) {
-        User originalUser = SessionService.getUser(httpSession);
+                                        HttpSession session) {
+        SessionService.validateUser(session, userId);
 
-        if (originalUser.getId() != id) {
-            log.error("User {} not authorized to edit user {}", id, originalUser.getId());
-            throw new UnauthorizedException("User not authorized to do this action");
-        }
 
-        log.info("Actualizando info del usuario {} con la data {}", id, user);
-        return ResponseEntity.ok().body(userService.updateUser(id, user));
+        log.info("Actualizando info del usuario {} con la data {}", userId, user);
+        return ResponseEntity.ok().body(userService.updateUser(userId, user));
     }
 
     @GetMapping("/{id}/auctions")
     public ResponseEntity<List<Auction>> getAuctions(@PathVariable("id") int userId, HttpSession session) {
-        User userSession = SessionService.getUser(session);
+        SessionService.validateUser(session, userId);
 
-        if (userId != userSession.getId()) {
-            throw new UnauthorizedException("User can not access this resource");
-        }
 
         List<Auction> auctions = userService.getAuctions(userId);
         return ResponseEntity.ok(auctions);
@@ -83,13 +77,47 @@ public class UserController {
     public ResponseEntity<List<BidLog>> getBidsForItem(@PathVariable("userId") int userId,
                                                        @PathVariable("itemId") int itemId,
                                                        HttpSession session) {
-        User userSession = SessionService.getUser(session);
-        if (userId != userSession.getId()) {
-            throw new UnauthorizedException("User can not access this resource");
-        }
+        SessionService.validateUser(session, userId);
+
 
         List<BidLog> logs = userService.getBidsFotItem(userId, itemId);
 
         return ResponseEntity.ok(logs);
     }
+
+    @PostMapping("/{userId}/payments")
+    public ResponseEntity<User> registerPaymentMethod(@PathVariable("userId") int userId,
+                                                      @RequestBody PaymentMethod paymentMethod,
+                                                      HttpSession session) {
+        SessionService.validateUser(session, userId);
+
+        User user = userService.setPaymentMethod(paymentMethod, userId);
+        return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/{userId}/payments")
+    public ResponseEntity<List<PaymentMethod>> getPaymentMethod(@PathVariable("userId") int userId,
+                                                      HttpSession session) {
+        SessionService.validateUser(session, userId);
+        return ResponseEntity.ok(userService.getPaymentInfo(userId));
+    }
+
+    @DeleteMapping("/{userId}/payments/{paymentId}")
+    public ResponseEntity<?> deletePaymentMethod(@PathVariable("userId") int userId,
+                                                                @PathVariable("paymentId") int paymentId,
+                                                                HttpSession session) {
+        SessionService.validateUser(session, userId);
+        userService.deletePayment(paymentId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{userId}/payments/{paymentId}")
+    public ResponseEntity<?> getPaymentMethodById(@PathVariable("userId") int userId,
+                                                 @PathVariable("paymentId") int paymentId,
+                                                 HttpSession session) {
+        SessionService.validateUser(session, userId);
+
+        return ResponseEntity.ok(userService.getPaymentInfoById(paymentId));
+    }
+
 }

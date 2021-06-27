@@ -5,6 +5,7 @@ import com.google.common.base.Strings;
 import com.subastas.virtual.dto.auction.Auction;
 import com.subastas.virtual.dto.bid.BidLog;
 import com.subastas.virtual.dto.item.Item;
+import com.subastas.virtual.dto.payment.PaymentMethod;
 import com.subastas.virtual.dto.user.http.UserRegistrationRequest;
 import java.util.List;
 import lombok.Data;
@@ -40,11 +41,13 @@ public class User {
     private String phone;
     private String address;
 
-    // TODO: Esto debería estar en /users/{id}/items. A futuro cambiarlo y agregar @JsonIgnore
-
     @JsonIgnore
     @OneToMany(mappedBy = "owner")
     private List<Item> items;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "owner")
+    private List<PaymentMethod> paymentMethods;
 
     @JsonIgnore
     @ManyToMany(targetEntity = Auction.class,cascade = CascadeType.ALL )

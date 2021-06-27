@@ -59,6 +59,19 @@ public class SessionService {
         return user;
     }
 
+    public static User validateUser(HttpSession session, int userId) {
+        String username = (String) session.getAttribute(USERNAME_KEY);
+        User user = (User) session.getAttribute(USER_KEY);
+        if (username == null || user== null) {
+            throw new UnauthorizedException("No session found");
+        }
+
+        if (user.getId() != userId) {
+            throw new UnauthorizedException("User not authorized");
+        }
+        return user;
+    }
+
     public void hasRole(HttpSession session, String... roles) {
         User user = getUser(session);
         if (Arrays.stream(roles).noneMatch(r -> r.equalsIgnoreCase(user.getRole()))) {

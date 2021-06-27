@@ -3,11 +3,13 @@ package com.subastas.virtual.service;
 import com.subastas.virtual.dto.auction.Auction;
 import com.subastas.virtual.dto.bid.BidLog;
 import com.subastas.virtual.dto.item.Item;
+import com.subastas.virtual.dto.payment.PaymentMethod;
 import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.dto.user.http.UserRegistrationRequest;
 import com.subastas.virtual.exception.custom.NotFoundException;
 import com.subastas.virtual.exception.custom.RequestConflictException;
 import com.subastas.virtual.exception.custom.UserAlreadyExistsException;
+import com.subastas.virtual.repository.PaymentMethodRepository;
 import com.subastas.virtual.repository.UserInformationRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,13 +27,17 @@ public class UserService {
   Logger log = LoggerFactory.getLogger(UserService.class);
 
   UserInformationRepository userRepository;
+  PaymentMethodRepository paymentMethodRepository;
   private final JavaMailSender emailSender;
 
   private static final String STATUS_ACTIVE_USER = "active";
 
-  public UserService(UserInformationRepository userRepository, JavaMailSender emailSender) {
+  public UserService(UserInformationRepository userRepository,
+                     PaymentMethodRepository paymentMethodRepository,
+                     JavaMailSender emailSender) {
     this.userRepository = userRepository;
     this.emailSender = emailSender;
+    this.paymentMethodRepository = paymentMethodRepository;
   }
 
   public User createUser(UserRegistrationRequest request) {
@@ -133,5 +139,24 @@ public class UserService {
     // Si sacamos este .filter devolvemos toda la historia
     //return item.getBiddings().stream().filter(bid -> bid.getBidder() == userId).collect(Collectors.toList());
     return item.getBiddings();
+  }
+
+  public User setPaymentMethod(PaymentMethod paymentMethod, int userId) {
+    paymentMethod.setOwner(userId);
+    paymentMethodRepository.save(paymentMethod);
+    return getUser(userId);
+  }
+
+  public List<PaymentMethod> getPaymentInfo(int userId) {
+    return getUser(userId).getPaymentMethods();
+  }
+
+  public void deletePayment(int paymentId) {
+    paymentMethodRepository.deleteById(paymentId);
+  }
+
+  public PaymentMethod getPaymentInfoById(int paymentId) {
+    return paymentMethodRepository.findById(paymentId)
+        .orElseThrow(() -> new NotFoundException("payment method", paymentId));
   }
 }
