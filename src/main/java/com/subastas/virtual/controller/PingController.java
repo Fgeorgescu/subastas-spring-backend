@@ -20,10 +20,8 @@ public class PingController {
         this.sessionService = sessionService;
     }
 
-    @GetMapping("/ping")
-    public ResponseEntity<?> ping(HttpSession session) {
-        User user = sessionService.getUser(session);
-
-        return ResponseEntity.ok(String.format("Usuario %s. Pong :D", user.getUsername()));
+    @GetMapping(value = {"/ping", "/"})
+    public ResponseEntity<?> ping() {
+        return ResponseEntity.ok("pong");
     }
 }

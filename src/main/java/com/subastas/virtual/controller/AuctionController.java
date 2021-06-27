@@ -47,7 +47,7 @@ public class AuctionController {
      * @return
      */
     @PostMapping("")
-    public ResponseEntity<?> createNewAuction(@RequestBody CreateAuctionRequest request, HttpSession session) {
+    public ResponseEntity<Auction> createNewAuction(@RequestBody CreateAuctionRequest request, HttpSession session) {
         User user = SessionService.getUser(session);
 
         Auction auction = auctionService.createAuction(request);
@@ -96,11 +96,11 @@ public class AuctionController {
      * @return
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> addAuctionToFavorite(@PathVariable("id") int auctionId, HttpSession session) {
+    public ResponseEntity<User> addAuctionToFavorite(@PathVariable("id") int auctionId, HttpSession session) {
         User user = SessionService.getUser(session);
 
         log.info("Attaching info for user {} and auction {}", user.getUsername(), auctionId);
         auctionService.addParticipant(auctionId, user);
-        return ResponseEntity.ok(user.getId());
+        return ResponseEntity.ok(user);
     }
 }
