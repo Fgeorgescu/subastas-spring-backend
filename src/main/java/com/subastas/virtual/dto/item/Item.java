@@ -17,7 +17,12 @@ import lombok.ToString;
 @Table(name = "items")
 public class Item {
 
-    public static final String STATUS_PROCESSING = "PROCESSING";
+    public static final String STATUS_PROCESSING = "PROCESSING"; // Pendiente de aprobación
+    public static final String STATUS_WAITING_AUCTION = "WAITING_AUCTION"; // Esperando que la vinculen a una subasta
+    public static final String STATUS_PENDING = "PENDING"; // Esperando ser subastada, ya está vinculado
+    public static final String STATUS_ACTIVE = "ACTIVE"; // En subasta
+    public static final String STATUS_FINISHED = "FINISHED"; // Ya subastada
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

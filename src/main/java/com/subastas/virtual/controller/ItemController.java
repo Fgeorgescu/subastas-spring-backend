@@ -53,9 +53,9 @@ public class ItemController {
     @PostMapping("/{id}/bids")
     public ResponseEntity<?> processBid(@PathVariable("id") int itemId, @RequestBody BidRequest bid, HttpSession session) {
         User user = SessionService.getUser(session);
-        biddingService.processBid(bid, itemId, user.getId());
 
-        return ResponseEntity.ok().build();
+
+        return ResponseEntity.ok(biddingService.processBid(bid, itemId, user.getId()));
     }
 
     @GetMapping("/{id}/bids")

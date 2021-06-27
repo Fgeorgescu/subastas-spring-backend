@@ -14,14 +14,16 @@ public class BiddingService {
   BidRepository bidRepository;
   ItemService itemService;
   UserService userService;
+  AuctionService auctionService;
 
-  public BiddingService(BidRepository bidRepository, ItemService itemService, UserService userService) {
+  public BiddingService(BidRepository bidRepository, ItemService itemService, UserService userService, AuctionService auctionService) {
     this.bidRepository = bidRepository;
     this.itemService = itemService;
     this.userService = userService;
+    this.auctionService = auctionService;
   }
 
-  public void processBid(BidRequest bid, int itemId, int userId) {
+  public Item processBid(BidRequest bid, int itemId, int userId) {
     User user = userService.getUser(userId);
     Item item = itemService.getItem(itemId);
 
@@ -35,8 +37,9 @@ public class BiddingService {
 
     item.setCurrentPrice(bidAmount);
     itemService.saveItem(item);
-
     BidLog log = new BidLog(bidAmount, delta, user.getId(), item.getId());
     bidRepository.save(log);
+    auctionService.resetAuctionTimer(item.getAuction());
+    return item;
   }
 }

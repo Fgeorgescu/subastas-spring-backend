@@ -21,6 +21,8 @@ public class AuctionService {
     ItemRepository itemRepository;
     UserService userService;
     Logger log = LoggerFactory.getLogger(this.getClass());
+    // Pruebo si necesito la instancia viva para que active el timer.
+    private Auction activeAuction;
 
 
     public AuctionService(AuctionRepository auctionRepository,
@@ -94,4 +96,28 @@ public class AuctionService {
 
         return auction.getUsers();
     }
+
+    public Auction startAuction(int auctionId) {
+        Auction auction = getAuctionById(auctionId);
+        auction.startAuction();
+        log.info("persisting active auction");
+        this.activeAuction = auction;
+        return auctionRepository.save(auction);
+    }
+
+    /**
+     * Reiniciamos la subasta pero actualizamos el active item
+     * @param auctionId
+     * @return
+     */
+    public Auction resetAuctionTimer(int auctionId) {
+        log.info("Resetting timer for auction: {}", auctionId);
+
+        Auction auction = getAuctionById(auctionId);
+        auction.resetTimer();
+        auctionRepository.save(auction);
+        return auction;
+    }
+
+
 }
