@@ -65,12 +65,16 @@ public class UserController {
     }
 
     @GetMapping("/{id}/auctions")
-    public ResponseEntity<List<Auction>> getAuctions(@PathVariable("id") int userId, HttpSession session) {
+    public ResponseEntity<List<Auction>> getAuctions(@PathVariable("id") int userId,
+                                                     @RequestParam(name = "status", defaultValue = "") String status,
+                                                     HttpSession session) {
         SessionService.validateUser(session, userId);
+        List<Auction> auctions;
+        if ("".equalsIgnoreCase(status)) {
+            return ResponseEntity.ok(userService.getAuctions(userId));
+        }
+        return ResponseEntity.ok(userService.getAuctions(userId, status));
 
-
-        List<Auction> auctions = userService.getAuctions(userId);
-        return ResponseEntity.ok(auctions);
     }
 
     @GetMapping("/{userId}/items/{itemId}/bids")

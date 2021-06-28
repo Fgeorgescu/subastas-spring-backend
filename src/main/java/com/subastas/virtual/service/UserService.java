@@ -131,6 +131,13 @@ public class UserService {
     return actualUser.getAuctions();
   }
 
+  public List<Auction> getAuctions(int userId, String status) {
+
+    return getAuctions(userId).stream()
+        .filter(a -> a.getStatus().equalsIgnoreCase(status))
+        .collect(Collectors.toList());
+  }
+
   public List<BidLog> getBidsFotItem(int userId, int itemId) {
     Item item = getUser(userId).getItems().stream()
         .filter(i -> i.getId() == itemId).findFirst()
