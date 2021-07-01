@@ -9,7 +9,6 @@ import com.subastas.virtual.service.SessionService;
 import java.net.URI;
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/auctions")
 public class AuctionController {
 
-    Timer timer = new Timer();
     AuctionService auctionService;
 
     Logger log = LoggerFactory.getLogger(this.getClass());

@@ -9,6 +9,7 @@ import com.subastas.virtual.dto.user.http.request.CreatePasswordRequest;
 import com.subastas.virtual.exception.custom.UnauthorizedException;
 import com.subastas.virtual.service.SessionService;
 import com.subastas.virtual.service.UserService;
+import io.swagger.annotations.SwaggerDefinition;
 import java.net.URI;
 import java.util.List;
 import javax.servlet.http.HttpSession;
@@ -69,7 +70,6 @@ public class UserController {
                                                      @RequestParam(name = "status", defaultValue = "") String status,
                                                      HttpSession session) {
         SessionService.validateUser(session, userId);
-        List<Auction> auctions;
         if ("".equalsIgnoreCase(status)) {
             return ResponseEntity.ok(userService.getAuctions(userId));
         }

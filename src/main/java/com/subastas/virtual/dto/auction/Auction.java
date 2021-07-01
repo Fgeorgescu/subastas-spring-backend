@@ -6,6 +6,7 @@ import com.subastas.virtual.dto.item.Item;
 import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.exception.custom.NotFoundException;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 import javax.persistence.*;
 import lombok.Data;
@@ -32,7 +33,7 @@ public class Auction {
     private static final String CATEGORY_ORO = "ORO";
     private static final String CATEGORY_DIAMANTE = "DIAMANTE";
 
-    private static final Long DURATION_IN_MILI = 10L*1000; // 3 segundos
+    private static final Long DURATION_IN_MILI = 10L*1000; // 10 segundos
 
     @Transient
     @JsonIgnore
@@ -143,7 +144,7 @@ public class Auction {
         activeTask.cancel();
         activeTask = new AuctionTask();
         timer.schedule(activeTask, DURATION_IN_MILI);
-        this.activeUntil = LocalDateTime.now().plusMinutes(5);
+        this.activeUntil = LocalDateTime.now(ZoneOffset.UTC).plusMinutes(5).plusHours(3);
     }
 
     public void startTimer() {
