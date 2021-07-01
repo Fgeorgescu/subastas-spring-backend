@@ -33,7 +33,9 @@ public class Auction {
     private static final String CATEGORY_ORO = "ORO";
     private static final String CATEGORY_DIAMANTE = "DIAMANTE";
 
-    private static final Long DURATION_IN_MILI = 10L*60*1000; // 10 minutes
+
+    private static final Long DURATION_IN_MINUTES = 10L; // 10 minutes
+    private static final Long DURATION_IN_MILI = DURATION_IN_MINUTES*60*1000; // 10 minutes
 
     @Transient
     @JsonIgnore
@@ -124,10 +126,11 @@ public class Auction {
             log.info("No encontramos más items para la subasta {}, cerramos.", id);
             this.closeAuction();
         } else { // Si tenemos otro item activamos la subasta para el mismo.
-            this.activeItem = nextItemOptional.get().getId();
+            Item nextItem = nextItemOptional.get();
+            this.activeItem = nextItem.getId();
             log.info("Próximo item: {}. Ya se encuentra activo.", activeItem);
 
-            nextItemOptional.get().setStatus(Item.STATUS_ACTIVE);
+            nextItem.setStatus(Item.STATUS_ACTIVE);
             startTimer();
         }
 
@@ -144,7 +147,7 @@ public class Auction {
         activeTask.cancel();
         activeTask = new AuctionTask();
         timer.schedule(activeTask, DURATION_IN_MILI);
-        this.activeUntil = LocalDateTime.now(ZoneOffset.UTC).plusMinutes(5).minusHours(3);
+        this.activeUntil = LocalDateTime.now(ZoneOffset.UTC).plusMinutes(DURATION_IN_MINUTES).minusHours(3);
     }
 
     public void startTimer() {

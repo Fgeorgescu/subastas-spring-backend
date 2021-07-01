@@ -128,7 +128,7 @@ public class AuctionService {
         }
 
         auction.startAuction();
-
+        itemRepository.saveAll(auction.getItems());
         return auctionRepository.save(auction);
     }
 
