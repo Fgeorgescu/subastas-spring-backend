@@ -33,7 +33,7 @@ public class Auction {
     private static final String CATEGORY_ORO = "ORO";
     private static final String CATEGORY_DIAMANTE = "DIAMANTE";
 
-    private static final Long DURATION_IN_MILI = 10L*1000; // 10 segundos
+    private static final Long DURATION_IN_MILI = 10L*60*1000; // 10 minutes
 
     @Transient
     @JsonIgnore
@@ -144,7 +144,7 @@ public class Auction {
         activeTask.cancel();
         activeTask = new AuctionTask();
         timer.schedule(activeTask, DURATION_IN_MILI);
-        this.activeUntil = LocalDateTime.now(ZoneOffset.UTC).plusMinutes(5).plusHours(3);
+        this.activeUntil = LocalDateTime.now(ZoneOffset.UTC).plusMinutes(5).minusHours(3);
     }
 
     public void startTimer() {
