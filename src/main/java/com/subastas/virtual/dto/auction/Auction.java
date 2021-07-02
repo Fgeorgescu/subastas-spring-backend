@@ -5,6 +5,9 @@ import com.subastas.virtual.dto.auction.http.request.CreateAuctionRequest;
 import com.subastas.virtual.dto.item.Item;
 import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.exception.custom.NotFoundException;
+import com.subastas.virtual.repository.ItemRepository;
+import com.subastas.virtual.service.AuctionService;
+import com.subastas.virtual.service.ItemService;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -14,6 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 @Data
@@ -33,9 +37,8 @@ public class Auction {
     private static final String CATEGORY_ORO = "ORO";
     private static final String CATEGORY_DIAMANTE = "DIAMANTE";
 
-
     private static final Long DURATION_IN_MINUTES = 10L; // 10 minutes
-    private static final Long DURATION_IN_MILI = DURATION_IN_MINUTES*60*1000; // 10 minutes
+    private static final Long DURATION_IN_MILI = DURATION_IN_MINUTES*1000; // 10 minutes
 
     @Transient
     @JsonIgnore
@@ -97,11 +100,16 @@ public class Auction {
         activateNextItem();
         // Activamos la subasta e indicamos el momento del cierre
         this.status = STATUS_ACTIVE;
+        this.startTime = this.startTime == null ? LocalDateTime.now() : this.startTime;
     }
 
     /**
      * Todas estas acciones modifica el auction y despues persistimos. Pero el item status
      * no podemos :( O SI????
+     *
+     * Acá está el problema, como esto se llama desde la misma subasta, no tengo como actualziar.
+     *
+     * moverlo al servicio implica que refactorice como se manejan los crons :(
      */
     public void activateNextItem() {
 
@@ -113,6 +121,7 @@ public class Auction {
                 .orElseThrow(() -> new NotFoundException("Problem, there should be an item here"));
 
             item.setStatus(STATUS_FINISHED); // TODO: Esto se puede sacar a un metodo del item para que el Auction no sepa de estados de Items.
+            ItemService.saveItemStatic(item); // Feo feo
         }
 
         // Buscamos el siguiente (o primer) item
@@ -131,7 +140,9 @@ public class Auction {
             log.info("Próximo item: {}. Ya se encuentra activo.", activeItem);
 
             nextItem.setStatus(Item.STATUS_ACTIVE);
+            ItemService.saveItemStatic(nextItem); // Feo feo
             startTimer();
+            AuctionService.saveAuctionStatic(this); // "Si no, no se actualiza el "active until"
         }
 
     }
@@ -140,8 +151,11 @@ public class Auction {
         log.info("Finishing auction: {}", id);
         activeItem = null;
         status = STATUS_FINISHED;
+
+        AuctionService.saveAuctionStatic(this);
     }
 
+    // Se llama del service, no necesita del Static save
     public void resetTimer() {
         log.info("Resetting timer for auction {} and item {}.", id, activeItem);
         activeTask.cancel();
@@ -150,6 +164,7 @@ public class Auction {
         this.activeUntil = LocalDateTime.now(ZoneOffset.UTC).plusMinutes(DURATION_IN_MINUTES).minusHours(3);
     }
 
+    // Quien lo llama tiene la responsabilidad de gaurdar
     public void startTimer() {
         log.info("Iniciamos el timer para la subasta: {}", id);
         activeTask = new AuctionTask();

@@ -8,16 +8,19 @@ import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.exception.custom.NotFoundException;
 import com.subastas.virtual.repository.ItemRepository;
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ItemService {
 
-    private final ItemRepository itemRepository;
+  private static ItemRepository itemRepositoryStatic;
+  private final ItemRepository itemRepository;
     private final UserService userService;
 
   public ItemService(ItemRepository itemRepository, UserService userService) {
+    this.itemRepositoryStatic = itemRepository;
     this.itemRepository = itemRepository;
     this.userService = userService;
   }
@@ -46,5 +49,18 @@ public class ItemService {
       }).collect(Collectors.toList());
 
       return logsWrapped;
+  }
+
+  /**
+   * Esta aberración es posible gracias a que nuestro servicio es un Bean.
+   *
+   * Spring instancia todos los Beans como singletons cuando levanta la app. Consecuentemente, si bien es un atributo
+   * estático, se instancia el Bean y queda disponible, por eso no tira NPE.
+   *
+   * Esto lo necesitamos para acualizar el Item desde dentro de un auction. Si llegamos a refactorizar cambiamos esto.
+   * @param item
+   */
+  public static void saveItemStatic(Item item) {
+    itemRepositoryStatic.save(item);
   }
 }

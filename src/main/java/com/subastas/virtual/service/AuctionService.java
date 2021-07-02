@@ -21,9 +21,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuctionService {
 
-    AuctionRepository auctionRepository;
-    ItemRepository itemRepository;
-    UserService userService;
+    private AuctionRepository auctionRepository;
+    private static AuctionRepository auctionRepositoryStatic;
+    private ItemRepository itemRepository;
+    private UserService userService;
 
     /**
      * Handles auctions auto-start.
@@ -36,6 +37,7 @@ public class AuctionService {
                           ItemRepository itemRepository,
                           UserService userService) {
         this.auctionRepository = auctionRepository;
+        this.auctionRepositoryStatic = auctionRepository;
         this.itemRepository = itemRepository;
         this.userService = userService;
     }
@@ -128,7 +130,6 @@ public class AuctionService {
         }
 
         auction.startAuction();
-        itemRepository.saveAll(auction.getItems());
         return auctionRepository.save(auction);
     }
 
@@ -158,5 +159,18 @@ public class AuctionService {
             log.info("Automatically starting auction: {}", auction.getId());
             auction.startAuction();
         }
+    }
+
+    /**
+     * Esta aberración es posible gracias a que nuestro servicio es un Bean.
+     *
+     * Spring instancia todos los Beans como singletons cuando levanta la app. Consecuentemente, si bien es un atributo
+     * estático, se instancia el Bean y queda disponible, por eso no tira NPE.
+     *
+     * Esto lo necesitamos para acualizar el Item desde dentro de un auction. Si llegamos a refactorizar cambiamos esto.
+     * @param auction
+     */
+    public static void saveAuctionStatic(Auction auction) {
+        auctionRepositoryStatic.save(auction);
     }
 }
