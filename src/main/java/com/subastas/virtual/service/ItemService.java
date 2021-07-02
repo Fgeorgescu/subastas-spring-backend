@@ -8,7 +8,6 @@ import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.exception.custom.NotFoundException;
 import com.subastas.virtual.repository.ItemRepository;
 import java.util.List;
-import java.util.Properties;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +17,13 @@ public class ItemService {
   private static ItemRepository itemRepositoryStatic;
   private final ItemRepository itemRepository;
     private final UserService userService;
+    private final AuctionService auctionService;
 
-  public ItemService(ItemRepository itemRepository, UserService userService) {
+  public ItemService(ItemRepository itemRepository, UserService userService, AuctionService auctionService) {
     this.itemRepositoryStatic = itemRepository;
     this.itemRepository = itemRepository;
     this.userService = userService;
+    this.auctionService = auctionService;
   }
 
   public Item registerItem(RegisterItemRequest request, User user) {
@@ -31,9 +32,13 @@ public class ItemService {
 
     public Item getItem(int itemId) {
 
-        return itemRepository.findById(itemId).orElseThrow(
+        Item item = itemRepository.findById(itemId).orElseThrow(
             () -> new NotFoundException("item", itemId)
         );
+
+        item.setActiveUntil(auctionService.getAuctionById(item.getAuction()).getActiveUntil());
+
+        return item;
     }
 
   public Item saveItem(Item item) {

@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.subastas.virtual.dto.bid.BidLog;
 import com.subastas.virtual.dto.item.http.request.RegisterItemRequest;
 import com.subastas.virtual.dto.user.User;
+import com.subastas.virtual.repository.AuctionRepository;
+import com.subastas.virtual.service.AuctionService;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.*;
 import lombok.Data;
@@ -59,6 +62,10 @@ public class Item {
     @Column
     private float currentPrice;
 
+    @Transient
+    @JsonProperty("active_until")
+    private LocalDateTime activeUntil;
+
     public Item(RegisterItemRequest request, User user) {
         this.title = request.getTitle();
         this.description = request.getDescription();
@@ -66,5 +73,4 @@ public class Item {
         this.status = STATUS_PROCESSING;
         this.owner = user.getId();
     }
-
 }
