@@ -1,5 +1,6 @@
 package com.subastas.virtual.service;
 
+import com.subastas.virtual.dto.auction.Auction;
 import com.subastas.virtual.dto.bid.BidLog;
 import com.subastas.virtual.dto.bid.http.BidRequest;
 import com.subastas.virtual.dto.item.Item;
@@ -26,6 +27,7 @@ public class BiddingService {
   public Item processBid(BidRequest bid, int itemId, int userId) {
     User user = userService.getUser(userId);
     Item item = itemService.getItem(itemId);
+    Auction auction = auctionService.getAuctionById(item.getAuction());
 
     float bidAmount = bid.getBid();
     float current = item.getCurrentPrice();
@@ -36,10 +38,13 @@ public class BiddingService {
     }
 
     item.setCurrentPrice(bidAmount);
-    itemService.saveItem(item);
     BidLog log = new BidLog(bidAmount, delta, user.getId(), item.getId());
+    item.setActiveUntil(auction.getActiveUntil());
+
     bidRepository.save(log);
     auctionService.resetAuctionTimer(item.getAuction());
+    itemService.saveItem(item); // FEO
+
     return item;
   }
 }

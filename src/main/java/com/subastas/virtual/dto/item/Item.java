@@ -62,7 +62,6 @@ public class Item {
     @Column
     private float currentPrice;
 
-    @Transient
     @JsonProperty("active_until")
     private LocalDateTime activeUntil;
 

@@ -140,8 +140,9 @@ public class Auction {
             log.info("Próximo item: {}. Ya se encuentra activo.", activeItem);
 
             nextItem.setStatus(Item.STATUS_ACTIVE);
+            startTimer(); // Esto tiene que estar acá para que se actualize this.activeUntil
+            nextItem.setActiveUntil(this.activeUntil);
             ItemService.saveItemStatic(nextItem); // Feo feo
-            startTimer();
             AuctionService.saveAuctionStatic(this); // "Si no, no se actualiza el "active until"
         }
 
