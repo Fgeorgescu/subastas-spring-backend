@@ -1,5 +1,6 @@
 package com.subastas.virtual.dto.bid;
 
+import com.subastas.virtual.dto.payment.PaymentMethod;
 import javax.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,9 @@ public class BidLog {
 
   @Column(name = "itemId")
   private int itemId;
+
+  @Column(name = "payment_id")
+  private int paymentId;
 
   public BidLog(float bid, float bid_increase, int bidder, int item) {
     this.bid = bid;

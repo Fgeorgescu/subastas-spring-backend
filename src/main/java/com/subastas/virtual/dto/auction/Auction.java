@@ -5,11 +5,9 @@ import com.subastas.virtual.dto.auction.http.request.CreateAuctionRequest;
 import com.subastas.virtual.dto.item.Item;
 import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.exception.custom.NotFoundException;
-import com.subastas.virtual.repository.ItemRepository;
 import com.subastas.virtual.service.AuctionService;
 import com.subastas.virtual.service.ItemService;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.*;
 import javax.persistence.*;
 import lombok.Data;
@@ -17,7 +15,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 @Data
@@ -162,7 +159,7 @@ public class Auction {
         activeTask.cancel();
         activeTask = new AuctionTask();
         timer.schedule(activeTask, DURATION_IN_MILI);
-        this.activeUntil = LocalDateTime.now(ZoneOffset.UTC).plusMinutes(DURATION_IN_MINUTES).minusHours(3);
+        this.activeUntil = calculateNextActiveUntil();
     }
 
     // Quien lo llama tiene la responsabilidad de gaurdar
@@ -170,7 +167,7 @@ public class Auction {
         log.info("Iniciamos el timer para la subasta: {}", id);
         activeTask = new AuctionTask();
         timer.schedule(activeTask, DURATION_IN_MILI);
-        this.activeUntil = LocalDateTime.now().plusMinutes(5);
+        this.activeUntil = calculateNextActiveUntil();
     }
 
     /**
@@ -184,4 +181,8 @@ public class Auction {
             activateNextItem();
         }
     };
+
+    private LocalDateTime calculateNextActiveUntil() {
+        return LocalDateTime.now().plusMinutes(DURATION_IN_MINUTES);
+    }
 }

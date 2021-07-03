@@ -32,13 +32,9 @@ public class ItemService {
 
     public Item getItem(int itemId) {
 
-        Item item = itemRepository.findById(itemId).orElseThrow(
+        return itemRepository.findById(itemId).orElseThrow(
             () -> new NotFoundException("item", itemId)
         );
-
-        item.setActiveUntil(auctionService.getAuctionById(item.getAuction()).getActiveUntil());
-
-        return item;
     }
 
   public Item saveItem(Item item) {

@@ -1,10 +1,14 @@
 package com.subastas.virtual.dto.payment;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.subastas.virtual.dto.bid.BidLog;
 import com.subastas.virtual.dto.payment.converter.PaymentMethodDataConverter;
+import java.util.List;
 import java.util.Map;
 import javax.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @NoArgsConstructor
@@ -24,4 +28,12 @@ public class PaymentMethod {
 
   @Convert(converter = PaymentMethodDataConverter.class)
   private Map<String, Object> data;
+
+  @OneToMany(mappedBy = "paymentId")
+  @JsonIgnore
+  @ToString.Exclude
+  private List<BidLog> bids;
+
+  @Column(name = "status")
+  private String status = "PENDING_REVIEW";
 }

@@ -1,5 +1,6 @@
 package com.subastas.virtual.controller;
 
+import com.google.common.base.Strings;
 import com.subastas.virtual.dto.auction.Auction;
 import com.subastas.virtual.dto.bid.BidLog;
 import com.subastas.virtual.dto.payment.PaymentMethod;
@@ -101,9 +102,15 @@ public class UserController {
 
     @GetMapping("/{userId}/payments")
     public ResponseEntity<List<PaymentMethod>> getPaymentMethod(@PathVariable("userId") int userId,
+                                                      @RequestParam(value = "status", defaultValue = "") String status,
                                                       HttpSession session) {
         SessionService.validateUser(session, userId);
-        return ResponseEntity.ok(userService.getPaymentInfo(userId));
+
+        if (Strings.isNullOrEmpty(status)) {
+            return ResponseEntity.ok(userService.getPaymentInfo(userId));
+        } else {
+            return ResponseEntity.ok(userService.getPaymentInfo(userId, status));
+        }
     }
 
     @DeleteMapping("/{userId}/payments/{paymentId}")

@@ -158,6 +158,14 @@ public class UserService {
     return getUser(userId).getPaymentMethods();
   }
 
+  public List<PaymentMethod> getPaymentInfo(int userId, String status) {
+    return getUser(userId)
+        .getPaymentMethods()
+        .stream().filter(p -> status.equalsIgnoreCase(p.getStatus()))
+        .collect(Collectors.toList());
+  }
+
+
   public void deletePayment(int paymentId) {
     paymentMethodRepository.deleteById(paymentId);
   }
