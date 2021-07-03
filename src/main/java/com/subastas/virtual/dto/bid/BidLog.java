@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "bids")
-public class BidLog {
+public class BidLog implements Comparable<BidLog> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,5 +35,10 @@ public class BidLog {
     this.bid_increase = bid_increase;
     this.bidder = bidder;
     this.itemId = item;
+  }
+
+  @Override
+  public int compareTo(BidLog o) {
+    return (int) (this.getId() - o.getId());
   }
 }

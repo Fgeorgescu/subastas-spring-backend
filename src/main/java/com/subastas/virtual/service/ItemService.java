@@ -7,6 +7,7 @@ import com.subastas.virtual.dto.item.http.request.RegisterItemRequest;
 import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.exception.custom.NotFoundException;
 import com.subastas.virtual.repository.ItemRepository;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,7 @@ public class ItemService {
 
   public List<BidLogWrapper> getItemBids(int itemId) {
       List<BidLog> logs = getItem(itemId).getBiddings();
+      logs.sort(Collections.reverseOrder());
       List<BidLogWrapper> logsWrapped = logs.stream().map(b -> {
         User user = userService.getUser(b.getBidder());
         Item item = getItem(itemId);
