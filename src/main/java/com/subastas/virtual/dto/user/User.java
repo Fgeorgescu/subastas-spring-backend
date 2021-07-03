@@ -10,6 +10,7 @@ import com.subastas.virtual.dto.user.http.UserRegistrationRequest;
 import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import javax.persistence.*;
@@ -41,18 +42,22 @@ public class User {
     private String phone;
     private String address;
 
+    @ToString.Exclude
     @JsonIgnore
     @OneToMany(mappedBy = "owner")
     private List<Item> items;
 
+    @ToString.Exclude
     @JsonIgnore
     @OneToMany(mappedBy = "owner")
     private List<PaymentMethod> paymentMethods;
 
+    @ToString.Exclude
     @JsonIgnore
     @ManyToMany(targetEntity = Auction.class,cascade = CascadeType.ALL )
     private List<Auction> auctions;
 
+    @ToString.Exclude
     @JsonIgnore
     @OneToMany(mappedBy = "bidder")
     private List<BidLog> bids;

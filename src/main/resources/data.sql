@@ -97,7 +97,16 @@ INSERT INTO payment_method (id, type, name, owner, data, status)
 VALUES (4, 1, 'CBU aun no validado', 1,'{"alias":"test.test.test"}', 'PENDING');
 
 INSERT INTO payment_method (id, type, name, owner, data, status)
-VALUES (2, 0, 'Tarjeta de prueba 1', 2,'{"primeros_4":1234}', 'APPROVED');
+VALUES (5, 1, 'CBU validado', 1,'{"alias":"test.test.test"}', 'APPROVED');
+
+INSERT INTO payment_method (id, type, name, owner, data, status)
+VALUES (2, 0, 'Tarjeta de prueba 2', 2,'{"primeros_4":1234}', 'APPROVED');
+
+INSERT INTO payment_method (id, type, name, owner, data, status)
+VALUES (6, 1, 'CBU de prueba válido 3', 2,'{"alias":"pedro.maria.juan"}', 'APPROVED');
+
+INSERT INTO payment_method (id, type, name, owner, data, status)
+VALUES (7, 0, 'Tarjeta de prueba 4', 2,'{"primeros_4":4321}', 'PENDING');
 
 INSERT INTO payment_method (id, type, name, owner, data, status)
 VALUES (3, 0, 'Tarjeta de prueba 1', 3, '{"primeros_4":1234}', 'APPROVED');
