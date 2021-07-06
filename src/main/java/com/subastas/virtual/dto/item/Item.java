@@ -65,6 +65,10 @@ public class Item {
     @JsonProperty("active_until")
     private LocalDateTime activeUntil;
 
+    @JsonIgnore
+    @Column(columnDefinition = "int default -1")
+    private int winnerId = -1;
+
     public Item(RegisterItemRequest request, User user) {
         this.title = request.getTitle();
         this.description = request.getDescription();

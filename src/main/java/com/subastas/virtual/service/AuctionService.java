@@ -116,7 +116,7 @@ public class AuctionService {
 
         // Si el usuario NO tiene la misma categoría o superior, no se puede registrat
         if (!userCached.getCategory().isCategoryGreaterOrEqualsThan(auction.getCategory())) {
-            throw new RequestConflictException("You should be category " + auction.getCategory() + "or higher");
+            throw new RequestConflictException("You should be category " + auction.getCategory() + " or higher");
         }
 
         userService.addAuction(auction, actualUser.getId());

@@ -9,9 +9,13 @@ import com.subastas.virtual.dto.user.http.UserRegistrationRequest;
 import com.subastas.virtual.exception.custom.NotFoundException;
 import com.subastas.virtual.exception.custom.RequestConflictException;
 import com.subastas.virtual.exception.custom.UserAlreadyExistsException;
+import com.subastas.virtual.repository.BidRepository;
+import com.subastas.virtual.repository.ItemRepository;
 import com.subastas.virtual.repository.PaymentMethodRepository;
 import com.subastas.virtual.repository.UserInformationRepository;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,14 +32,18 @@ public class UserService {
 
   UserInformationRepository userRepository;
   PaymentMethodRepository paymentMethodRepository;
+  private final ItemRepository itemRepository;
+  private final BidRepository bidRepository;
   private final JavaMailSender emailSender;
 
   private static final String STATUS_ACTIVE_USER = "active";
 
   public UserService(UserInformationRepository userRepository,
                      PaymentMethodRepository paymentMethodRepository,
-                     JavaMailSender emailSender) {
+                     ItemRepository itemRepository, BidRepository bidRepository, JavaMailSender emailSender) {
     this.userRepository = userRepository;
+    this.itemRepository = itemRepository;
+    this.bidRepository = bidRepository;
     this.emailSender = emailSender;
     this.paymentMethodRepository = paymentMethodRepository;
   }
@@ -173,5 +181,23 @@ public class UserService {
   public PaymentMethod getPaymentInfoById(int paymentId) {
     return paymentMethodRepository.findById(paymentId)
         .orElseThrow(() -> new NotFoundException("payment method", paymentId));
+  }
+
+  public Map<String, Object> getUserAnalytics(int userId) {
+    User user = getUser(userId);
+    int items = 0;
+    for (Auction a : user.getAuctions()) {
+      for (Item i : a.getItems()) {
+        items++;
+      }
+    }
+
+    Map<String, Object> analytics = new HashMap<>();
+    analytics.put("auctions_participated", user.getAuctions().size());
+    analytics.put("items_participated", items);
+    analytics.put("items_won", itemRepository.countAllByWinnerId(userId));
+    analytics.put("total_bids", bidRepository.countBidLogsByBidder(userId));
+
+    return analytics;
   }
 }

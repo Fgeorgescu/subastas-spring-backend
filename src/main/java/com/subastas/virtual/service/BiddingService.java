@@ -35,7 +35,7 @@ public class BiddingService {
    * Las constantes deben ser UPPERCASE para asegurarnos que no importe el casing del input, ya que
    * se normaliza con .toUppercase()
    */
-  private static final List<Category> LIMITLESS_AUCTION_TYPES = Arrays.asList(Category.ORO, Category.DIAMANTE);
+  private static final List<Category> LIMITLESS_AUCTION_TYPES = Arrays.asList(Category.ORO, Category.PLATINO);
 
   public BiddingService(BidRepository bidRepository, ItemService itemService, UserService userService, AuctionService auctionService) {
     this.bidRepository = bidRepository;
@@ -81,5 +81,9 @@ public class BiddingService {
     itemService.saveItem(item); // FEO
 
     return item;
+  }
+
+  public long getAmountOfBidsByUserId(int userId) {
+    return bidRepository.countBidLogsByBidder(userId);
   }
 }

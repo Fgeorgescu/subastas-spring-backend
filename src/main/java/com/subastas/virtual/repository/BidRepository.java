@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BidRepository extends JpaRepository<BidLog, Integer> {
+  long countBidLogsByBidder(int bidderId);
 }

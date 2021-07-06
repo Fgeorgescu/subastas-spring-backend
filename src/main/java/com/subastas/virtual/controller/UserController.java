@@ -131,4 +131,12 @@ public class UserController {
         return ResponseEntity.ok(userService.getPaymentInfoById(paymentId));
     }
 
+    @GetMapping("/{userId}/analytics")
+    public ResponseEntity<?> getUserAnalytics(@PathVariable("userId") int userId,
+                                                  HttpSession session) {
+        SessionService.validateUser(session, userId);
+
+        return ResponseEntity.ok(userService.getUserAnalytics(userId));
+    }
+
 }

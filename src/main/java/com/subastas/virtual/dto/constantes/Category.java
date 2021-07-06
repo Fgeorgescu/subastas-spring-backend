@@ -3,9 +3,10 @@ package com.subastas.virtual.dto.constantes;
 public enum Category {
 
   COMUN,
-  ORO,
   PLATA,
-  DIAMANTE;
+  ORO,
+  PLATINO,
+  ESPECIAL;
 
   public boolean isCategoryGreaterOrEqualsThan(Category other) {
     return this.ordinal() >= other.ordinal();

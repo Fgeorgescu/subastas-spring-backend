@@ -2,6 +2,7 @@ package com.subastas.virtual.dto.auction;
 
 import com.fasterxml.jackson.annotation.*;
 import com.subastas.virtual.dto.auction.http.request.CreateAuctionRequest;
+import com.subastas.virtual.dto.bid.BidLog;
 import com.subastas.virtual.dto.constantes.Category;
 import com.subastas.virtual.dto.item.Item;
 import com.subastas.virtual.dto.user.User;
@@ -30,10 +31,12 @@ public class Auction {
     public static final String STATUS_ACTIVE = "ACTIVE";
     public static final String STATUS_FINISHED = "FINISHED";
 
+    /*
     private static final String CATEGORY_COMUN = "COMUN";
     private static final String CATEGORY_PLATA = "PLATA";
     private static final String CATEGORY_ORO = "ORO";
     private static final String CATEGORY_DIAMANTE = "DIAMANTE";
+    */
 
     private static final Long DURATION_IN_MINUTES = 10L; // 10 minutes
     private static final Long DURATION_IN_MILI = DURATION_IN_MINUTES*60*1000; // 10 minutes
@@ -117,6 +120,12 @@ public class Auction {
             Item item = this.getItems().stream()
                 .filter(i -> i.getId() == activeItem).findFirst()
                 .orElseThrow(() -> new NotFoundException("Problem, there should be an item here"));
+
+            Optional<BidLog> winningBid = item.getBiddings().stream()
+                .filter(b -> b.getBid() == item.getCurrentPrice()).findFirst();
+
+            // Si tenemos una puja ganadora, ponemos ese usuario como el ganador
+            winningBid.ifPresent(bidLog -> item.setWinnerId(bidLog.getBidder()));
 
             item.setStatus(STATUS_FINISHED); // TODO: Esto se puede sacar a un metodo del item para que el Auction no sepa de estados de Items.
             ItemService.saveItemStatic(item); // Feo feo
