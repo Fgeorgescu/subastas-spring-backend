@@ -1,10 +1,10 @@
 -- Insert users in DB
 INSERT INTO users
-VALUES (1, 'test 123', 'CLASSIC', 123456789, 'mailclassic@test.com', 'pass', '15123451', 'user', 'active', 'testclassic', '123');
+VALUES (1, 'test 123', 0, 123456789, 'mailclassic@test.com', 'pass', '15123451', 'user', 'active', 'testclassic', '123');
 INSERT INTO users
-VALUES (2, 'test 123', 'GOLD', 223456789, 'mailgold@test.com', 'pass', '15123452', 'user', 'active', 'testgold', '123');
+VALUES (2, 'test 123', 2, 223456789, 'mailgold@test.com', 'pass', '15123452', 'user', 'active', 'testgold', '123');
 INSERT INTO users
-VALUES (3, 'test 123', 'SILVER', 323456789, 'mailsilver@test.com', 'pass', '15123453', 'user', 'active', 'testsilver', '123');
+VALUES (3, 'test 123', 1, 323456789, 'mailsilver@test.com', 'pass', '15123453', 'user', 'active', 'testsilver', '123');
 
 -- Insert Items
 INSERT INTO items (id, title, description, auction, status, owner, base_price, current_price)
@@ -78,14 +78,14 @@ values (10, 'https://res.cloudinary.com/dr4i78wvu/image/upload/v1624488562/initi
 
 -- Insert auctions
 INSERT INTO auction (id, title, category, status)
-VALUES (1, 'Subasta tecno', 'Común', 'PENDING');
+VALUES (1, 'Subasta tecno', 0, 'PENDING');
 
 INSERT INTO auction (id, title, category, status)
-VALUES (2, 'Deportes', 'Oro', 'PENDING');
+VALUES (2, 'Deportes', 2, 'PENDING');
 
 
 INSERT INTO auction (id, title, category, status)
-VALUES (3, 'Cosas para el hogar', 'Plata', 'PENDING');
+VALUES (3, 'Cosas para el hogar', 1, 'PENDING');
 
 
 -- Insert payment method -> 0 es Credit card y 1 es CBU

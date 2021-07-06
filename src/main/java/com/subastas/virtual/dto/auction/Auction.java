@@ -2,6 +2,7 @@ package com.subastas.virtual.dto.auction;
 
 import com.fasterxml.jackson.annotation.*;
 import com.subastas.virtual.dto.auction.http.request.CreateAuctionRequest;
+import com.subastas.virtual.dto.constantes.Category;
 import com.subastas.virtual.dto.item.Item;
 import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.exception.custom.NotFoundException;
@@ -61,7 +62,8 @@ public class Auction {
     private String title;
 
     @Column
-    private String category;
+    @Enumerated
+    private Category category;
 
     @Column
     private String status;
@@ -85,9 +87,8 @@ public class Auction {
 
     public Auction(CreateAuctionRequest request) {
         this.title = request.getTitle();
-        this.category = request.getCategory();
         this.status = STATUS_PENDING;
-        this.category = CATEGORY_COMUN;
+        this.category = Category.COMUN;
         this.startTime = request.getStartingTime();
     }
 

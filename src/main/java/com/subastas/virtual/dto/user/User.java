@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import com.google.common.base.Strings;
 import com.subastas.virtual.dto.auction.Auction;
 import com.subastas.virtual.dto.bid.BidLog;
+import com.subastas.virtual.dto.constantes.Category;
 import com.subastas.virtual.dto.item.Item;
 import com.subastas.virtual.dto.payment.PaymentMethod;
 import com.subastas.virtual.dto.user.http.UserRegistrationRequest;
@@ -37,7 +38,8 @@ public class User {
     private String validationCode;
     private String status;
     private String role;
-    private String category;
+    @Enumerated
+    private Category category;
     private int document;
     private String phone;
     private String address;
@@ -74,7 +76,7 @@ public class User {
         this.mail = request.getMail();
         this.validationCode = RandomStringUtils.randomAlphabetic(5);
         this.status = "pending";
-        this.category = "CLASSIC";
+        this.category = Category.COMUN;
         this.document = request.getDocument();
         this.phone = request.getPhone();
         this.address = request.getAddress();
@@ -82,7 +84,7 @@ public class User {
 
     public void update(User i) {
         this.status = Strings.isNullOrEmpty(i.status) ? this.status : i.status;
-        this.category = Strings.isNullOrEmpty(i.category) ? this.category : i.category;
+        this.category = this.category != null ? this.category : i.category;
         this.phone = Strings.isNullOrEmpty(i.phone) ? this.phone : i.phone;
         this.address = Strings.isNullOrEmpty(i.address) ? this.address : i.address;
         this.password = Strings.isNullOrEmpty(i.password) ? this.password : i.password;

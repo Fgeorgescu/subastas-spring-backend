@@ -6,6 +6,7 @@ import com.subastas.virtual.dto.item.Item;
 import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.exception.custom.NotFoundException;
 import com.subastas.virtual.exception.custom.RequestConflictException;
+import com.subastas.virtual.exception.custom.UnauthorizedException;
 import com.subastas.virtual.repository.AuctionRepository;
 import com.subastas.virtual.repository.ItemRepository;
 import java.sql.Timestamp;
@@ -110,9 +111,15 @@ public class AuctionService {
     }
 
   public void addParticipant(int auctionId, User userCached) {
-
+        User actualUser = userService.getUser(userCached.getId());
         Auction auction = getAuctionById(auctionId);
-        userService.addAuction(auction, userCached.getId());
+
+        // Si el usuario NO tiene la misma categoría o superior, no se puede registrat
+        if (!userCached.getCategory().isCategoryGreaterOrEqualsThan(auction.getCategory())) {
+            throw new RequestConflictException("You should be category " + auction.getCategory() + "or higher");
+        }
+
+        userService.addAuction(auction, actualUser.getId());
   }
 
     public List<User> getUsers(int auctionId) {
