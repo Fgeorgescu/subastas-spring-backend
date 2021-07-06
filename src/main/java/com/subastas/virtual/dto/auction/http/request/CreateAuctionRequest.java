@@ -2,6 +2,7 @@ package com.subastas.virtual.dto.auction.http.request;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.subastas.virtual.dto.constantes.Currency;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,4 +25,6 @@ public class CreateAuctionRequest {
     @JsonProperty("item_ids")
     @JsonAlias("itemIds")
     private List<Integer> itemIds = new ArrayList<>();
+
+    private Currency currency = Currency.PESO;
 }

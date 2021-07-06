@@ -3,6 +3,7 @@ package com.subastas.virtual.dto.item;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.subastas.virtual.dto.bid.BidLog;
+import com.subastas.virtual.dto.constantes.Currency;
 import com.subastas.virtual.dto.item.http.request.RegisterItemRequest;
 import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.repository.AuctionRepository;
@@ -69,11 +70,16 @@ public class Item {
     @Column(columnDefinition = "int default -1")
     private int winnerId = -1;
 
+    @Column(columnDefinition = "int default 0") // por defecto pesos
+    @Enumerated
+    private Currency currency;
+
     public Item(RegisterItemRequest request, User user) {
         this.title = request.getTitle();
         this.description = request.getDescription();
         this.imageUrls = request.getImageUrls();
         this.status = STATUS_PROCESSING;
         this.owner = user.getId();
+        this.currency = request.getCurrency();
     }
 }

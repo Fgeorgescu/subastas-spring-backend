@@ -46,7 +46,7 @@ public class AuctionController {
      */
     @PostMapping("")
     public ResponseEntity<Auction> createNewAuction(@RequestBody CreateAuctionRequest request, HttpSession session) {
-        User user = SessionService.getUser(session);
+        SessionService.getUser(session);
 
         Auction auction = auctionService.createAuction(request);
 

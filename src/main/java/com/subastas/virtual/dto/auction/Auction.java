@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import com.subastas.virtual.dto.auction.http.request.CreateAuctionRequest;
 import com.subastas.virtual.dto.bid.BidLog;
 import com.subastas.virtual.dto.constantes.Category;
+import com.subastas.virtual.dto.constantes.Currency;
 import com.subastas.virtual.dto.item.Item;
 import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.exception.custom.NotFoundException;
@@ -88,11 +89,16 @@ public class Auction {
     @Column
     private LocalDateTime startTime;
 
+    @Column(columnDefinition = "int default 0") // por defecto pesos
+    @Enumerated
+    private Currency currency;
+
     public Auction(CreateAuctionRequest request) {
         this.title = request.getTitle();
         this.status = STATUS_PENDING;
         this.category = Category.COMUN;
         this.startTime = request.getStartingTime();
+        this.currency = request.getCurrency();
     }
 
     public void startAuction() {

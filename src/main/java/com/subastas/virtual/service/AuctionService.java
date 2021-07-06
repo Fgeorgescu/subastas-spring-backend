@@ -2,6 +2,7 @@ package com.subastas.virtual.service;
 
 import com.subastas.virtual.dto.auction.Auction;
 import com.subastas.virtual.dto.auction.http.request.CreateAuctionRequest;
+import com.subastas.virtual.dto.constantes.Currency;
 import com.subastas.virtual.dto.item.Item;
 import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.exception.custom.NotFoundException;
@@ -46,13 +47,18 @@ public class AuctionService {
     public Auction createAuction(CreateAuctionRequest request) {
         Auction auction = new Auction(request);
         auction = auctionRepository.save(auction);
-
+        final Currency currency = auction.getCurrency();
         if (auction.getItems().isEmpty()) {
             throw new RequestConflictException("There should be at least one item in an auction");
         }
 
         // Obtenemos los items que vamos a usar
         List<Item> items = itemRepository.findAllById(request.getItemIds());
+
+        // Validamos que todos sean de la moneda correcta. Si no tiramos un error
+        if (items.stream().anyMatch(i -> i.getCurrency().compareTo(currency) != 0)) {
+            throw new RequestConflictException("Items should be in " + auction.getCurrency());
+        }
 
         // Validamos que todos los items existan.
         if (items.size() != request.getItemIds().size()) {
