@@ -7,7 +7,6 @@ import com.subastas.virtual.dto.item.Item;
 import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.exception.custom.NotFoundException;
 import com.subastas.virtual.exception.custom.RequestConflictException;
-import com.subastas.virtual.exception.custom.UnauthorizedException;
 import com.subastas.virtual.repository.AuctionRepository;
 import com.subastas.virtual.repository.ItemRepository;
 import java.sql.Timestamp;

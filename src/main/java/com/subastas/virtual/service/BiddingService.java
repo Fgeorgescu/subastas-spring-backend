@@ -22,7 +22,7 @@ public class BiddingService {
   ItemService itemService;
   UserService userService;
   AuctionService auctionService;
-  PaymentMethodRepository paymentMethodRepository;
+  private final PaymentMethodRepository paymentMethodRepository;
 
   /**
    * Cota inferior para una puja. Representa el % que debe aumantar una puja el precio actual del articulo
@@ -41,11 +41,12 @@ public class BiddingService {
    */
   private static final List<Category> LIMITLESS_AUCTION_TYPES = Arrays.asList(Category.ORO, Category.PLATINO);
 
-  public BiddingService(BidRepository bidRepository, ItemService itemService, UserService userService, AuctionService auctionService) {
+  public BiddingService(BidRepository bidRepository, ItemService itemService, UserService userService, AuctionService auctionService, PaymentMethodRepository paymentMethodRepository) {
     this.bidRepository = bidRepository;
     this.itemService = itemService;
     this.userService = userService;
     this.auctionService = auctionService;
+    this.paymentMethodRepository = paymentMethodRepository;
   }
 
   public Item processBid(BidRequest bid, int itemId, int userId) {

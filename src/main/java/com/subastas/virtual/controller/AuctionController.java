@@ -8,7 +8,6 @@ import com.subastas.virtual.service.AuctionService;
 import com.subastas.virtual.service.SessionService;
 import java.net.URI;
 import java.util.List;
-import java.util.Timer;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
