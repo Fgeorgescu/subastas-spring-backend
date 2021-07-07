@@ -46,8 +46,9 @@ public class AuctionService {
 
     public Auction createAuction(CreateAuctionRequest request) {
         Auction auction = new Auction(request);
-        auction = auctionRepository.save(auction);
+        auction = auctionRepository.save(auction); // TODO: Validar si esto podemos moverlo al final del método, elimina la necesidad de eliminar a mano la subasta
         final Currency currency = auction.getCurrency();
+
         if (auction.getItems().isEmpty()) {
             throw new RequestConflictException("There should be at least one item in an auction");
         }
@@ -57,6 +58,7 @@ public class AuctionService {
 
         // Validamos que todos sean de la moneda correcta. Si no tiramos un error
         if (items.stream().anyMatch(i -> i.getCurrency().compareTo(currency) != 0)) {
+            auctionRepository.delete(auction); //Rollback
             throw new RequestConflictException("Items should be in " + auction.getCurrency());
         }
 
@@ -119,6 +121,14 @@ public class AuctionService {
   public void addParticipant(int auctionId, User userCached) {
         User actualUser = userService.getUser(userCached.getId());
         Auction auction = getAuctionById(auctionId);
+
+      if (auction.getStatus().equalsIgnoreCase(Auction.STATUS_FINISHED)) {
+          throw new RequestConflictException("Auction already finished, you can not register.");
+      }
+
+        if (actualUser.getAuctions().contains(auction)) {
+            throw new RequestConflictException("User already registered for this auction.");
+        }
 
         // Si el usuario NO tiene la misma categoría o superior, no se puede registrat
         if (!userCached.getCategory().isCategoryGreaterOrEqualsThan(auction.getCategory())) {

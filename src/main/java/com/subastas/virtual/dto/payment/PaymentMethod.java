@@ -2,6 +2,7 @@ package com.subastas.virtual.dto.payment;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.subastas.virtual.dto.bid.BidLog;
+import com.subastas.virtual.dto.constantes.Currency;
 import com.subastas.virtual.dto.payment.converter.PaymentMethodDataConverter;
 import java.util.List;
 import java.util.Map;
@@ -36,4 +37,8 @@ public class PaymentMethod {
 
   @Column(name = "status")
   private String status = "PENDING_REVIEW";
+
+  @Column(columnDefinition = "int default 0")
+  @Enumerated
+  private Currency currency = Currency.PESO;
 }

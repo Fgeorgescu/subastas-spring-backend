@@ -11,5 +11,5 @@ public class BidRequest {
   private float bid;
 
   @JsonProperty("payment_method")
-  private Long paymentMethod;
+  private Integer paymentMethod;
 }

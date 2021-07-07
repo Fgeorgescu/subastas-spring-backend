@@ -5,9 +5,12 @@ import com.subastas.virtual.dto.bid.BidLog;
 import com.subastas.virtual.dto.bid.http.BidRequest;
 import com.subastas.virtual.dto.constantes.Category;
 import com.subastas.virtual.dto.item.Item;
+import com.subastas.virtual.dto.payment.PaymentMethod;
 import com.subastas.virtual.dto.user.User;
+import com.subastas.virtual.exception.custom.NotFoundException;
 import com.subastas.virtual.exception.custom.RequestConflictException;
 import com.subastas.virtual.repository.BidRepository;
+import com.subastas.virtual.repository.PaymentMethodRepository;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,7 @@ public class BiddingService {
   ItemService itemService;
   UserService userService;
   AuctionService auctionService;
+  PaymentMethodRepository paymentMethodRepository;
 
   /**
    * Cota inferior para una puja. Representa el % que debe aumantar una puja el precio actual del articulo
@@ -48,6 +52,13 @@ public class BiddingService {
     User user = userService.getUser(userId);
     Item item = itemService.getItem(itemId);
     Auction auction = auctionService.getAuctionById(item.getAuction());
+
+    PaymentMethod paymentMethod = paymentMethodRepository.findById(bid.getPaymentMethod())
+        .orElseThrow(() -> new NotFoundException("payment method", bid.getPaymentMethod()));
+
+    if (!paymentMethod.getCurrency().equals(auction.getCurrency())) {
+      throw new RequestConflictException("You can not pay this auction with " + paymentMethod.getCurrency().getSymbol());
+    }
 
     // TODO: Se podría atomizar la lógica que calcila el minimo y máximo dependiendo de la subasta,
     //  el código duplicado puede traer errores. Pero ahora al menos pomemos manejar las variables para afectar el
