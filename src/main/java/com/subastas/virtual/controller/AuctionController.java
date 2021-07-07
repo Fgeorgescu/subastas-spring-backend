@@ -62,9 +62,9 @@ public class AuctionController {
             return ResponseEntity.ok(auctionService.getAuctions());
         }
 
-        auctionService.getAuctionByStatus(status);
 
-        return ResponseEntity.ok(auctionService.getAuctionByStatus(status));
+
+        return ResponseEntity.ok(auctionService.getAuctionByStatus(status.toUpperCase().split(",")));
     }
 
     @GetMapping("/{id}")

@@ -5,5 +5,5 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AuctionRepository extends JpaRepository<Auction, Integer> {
-  List<Auction> findAllByStatus(String status);
+  List<Auction> findAllByStatusIn(String[] status);
 }

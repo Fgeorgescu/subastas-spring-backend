@@ -110,8 +110,8 @@ public class AuctionService {
         return itemRepository.findAllByAuction(auctionId);
     }
 
-    public List<Auction> getAuctionByStatus(String status) {
-        return auctionRepository.findAllByStatus(status);
+    public List<Auction> getAuctionByStatus(String[] status) {
+        return auctionRepository.findAllByStatusIn(status);
     }
 
     public List<Auction> getAuctions() {
