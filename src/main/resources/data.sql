@@ -170,6 +170,12 @@ VALUES (7, 0, 'Tarjeta de prueba 4', 2,'{"primeros_4":4321}', 'PENDING');
 INSERT INTO payment_method (id, type, name, owner, data, status)
 VALUES (3, 0, 'Tarjeta de prueba 1', 3, '{"primeros_4":1234}', 'APPROVED');
 
+INSERT INTO payment_method (id, type, name, owner, data, status, currency)
+VALUES (10, 1, 'CBU validado en dolares', 2,'{"alias":"user.oro.dolar"}', 'APPROVED', 1);
+
+INSERT INTO payment_method (id, type, name, owner, data, status, currency)
+VALUES (9, 1, 'CBU validado en dolares', 2,'{"alias":"user.oro.dolar-pending"}', 'PENDING', 1);
+
 -- Users registrados en subastas
 
 insert into users_auctions (users_id, auctions_id)
