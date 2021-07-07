@@ -7,8 +7,8 @@ INSERT INTO users
 VALUES (3, 'test 123', 1, 323456789, 'mailsilver@test.com', 'pass', '15123453', 'user', 'active', 'testsilver', '123');
 
 -- Insert Items
-INSERT INTO items (id, title, description, auction, status, owner, base_price, current_price, winner_id)
-VALUES (1, 'Macbook Pro 2018', 'Macbook pro 2018 con poco uso y mucho cuidado', 1, 'FINISHED', 1, 15000.0, 25000.0, 1);
+INSERT INTO items (id, title, description, auction, status, owner, base_price, current_price, winner_id, active_until)
+VALUES (1, 'Macbook Pro 2018', 'Macbook pro 2018 con poco uso y mucho cuidado', 1, 'FINISHED', 1, 15000.0, 25000.0, 1, DATEADD('HOUR', 1, CURRENT_TIMESTAMP()));
 
 INSERT INTO items (id, title, description, auction, status, owner, base_price, current_price)
 VALUES (2, 'Calzado montaña', 'Calzado robusto para hacer montañismo', 2, 'PENDING', 2, 500.0, 500.0);
@@ -131,17 +131,17 @@ values (15, 'https://res.cloudinary.com/dr4i78wvu/image/upload/v1624488562/initi
 
 -- Insert auctions
 -- Para agregar fechas futuras dinámicamente: DATEADD('MINUTE',30, CURRENT_TIMESTAMP())
-INSERT INTO auction (id, title, category, status)
-VALUES (1, 'Subasta tecno', 0, 'FINISHED');
+INSERT INTO auction (id, title, category, status, start_time, active_until)
+VALUES (1, 'Subasta tecno', 0, 'FINISHED', DATEADD('HOUR',2, CURRENT_TIMESTAMP()), DATEADD('HOUR', 1, CURRENT_TIMESTAMP()));
 
 INSERT INTO auction (id, title, category, status, start_time)
 VALUES (2, 'Deportes', 2, 'PENDING', DATEADD('MINUTE',30, CURRENT_TIMESTAMP()));
 
-INSERT INTO auction (id, title, category, status)
-VALUES (3, 'Cosas para el hogar', 1, 'PENDING');
+INSERT INTO auction (id, title, category, status, start_time)
+VALUES (3, 'Cosas para el hogar', 1, 'PENDING', DATEADD('HOUR',2, CURRENT_TIMESTAMP()));
 
-INSERT INTO auction (id, title, category, status, currency)
-VALUES (4, 'Subasta en dolares', 0, 'PENDING', 1);
+INSERT INTO auction (id, title, category, status, currency, start_time)
+VALUES (4, 'Subasta en dolares', 0, 'PENDING', 1, DATEADD('DAY',2, CURRENT_TIMESTAMP()));
 
 
 -- Insert payment method -> 0 es Credit card y 1 es CBU

@@ -9,6 +9,7 @@ import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.repository.AuctionRepository;
 import com.subastas.virtual.service.AuctionService;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 import lombok.Data;
@@ -54,7 +55,7 @@ public class Item {
 
     @JsonIgnore
     @ToString.Exclude
-    @OneToMany(mappedBy = "itemId")
+    @OneToMany(mappedBy = "itemId", fetch=FetchType.EAGER)
     private List<BidLog> biddings;
 
     @Column
