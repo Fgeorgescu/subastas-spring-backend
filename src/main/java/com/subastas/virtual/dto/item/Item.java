@@ -66,7 +66,7 @@ public class Item {
     @JsonProperty("active_until")
     private LocalDateTime activeUntil;
 
-    @JsonIgnore
+    @JsonIgnore // No mostramos quien lo ganó. Podría ser una relación 1:n si queremos más info
     @Column(columnDefinition = "int default -1")
     private int winnerId = -1;
 
