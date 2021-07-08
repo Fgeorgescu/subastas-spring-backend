@@ -30,7 +30,7 @@ public class PaymentMethod {
   @Convert(converter = PaymentMethodDataConverter.class)
   private Map<String, Object> data;
 
-  @OneToMany(mappedBy = "paymentId")
+  @OneToMany(mappedBy = "paymentId", fetch = FetchType.EAGER)
   @JsonIgnore
   @ToString.Exclude
   private List<BidLog> bids;

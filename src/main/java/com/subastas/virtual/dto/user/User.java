@@ -15,6 +15,8 @@ import lombok.ToString;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import javax.persistence.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
 @Data
@@ -46,21 +48,24 @@ public class User {
 
     @ToString.Exclude
     @JsonIgnore
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
     private List<Item> items;
 
     @ToString.Exclude
     @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "owner")
     private List<PaymentMethod> paymentMethods;
 
     @ToString.Exclude
     @JsonIgnore
-    @ManyToMany(targetEntity = Auction.class,cascade = CascadeType.ALL )
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany(targetEntity = Auction.class,cascade = CascadeType.ALL)
     private List<Auction> auctions;
 
     @ToString.Exclude
     @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "bidder")
     private List<BidLog> bids;
 

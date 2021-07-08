@@ -2,7 +2,6 @@ package com.subastas.virtual.dto.auction;
 
 import com.fasterxml.jackson.annotation.*;
 import com.subastas.virtual.dto.auction.http.request.CreateAuctionRequest;
-import com.subastas.virtual.dto.bid.BidLog;
 import com.subastas.virtual.dto.constantes.Category;
 import com.subastas.virtual.dto.constantes.Currency;
 import com.subastas.virtual.dto.item.Item;
@@ -10,12 +9,15 @@ import com.subastas.virtual.dto.user.User;
 import com.subastas.virtual.exception.custom.NotFoundException;
 import com.subastas.virtual.service.AuctionService;
 import com.subastas.virtual.service.ItemService;
+import com.subastas.virtual.utils.AuctionTaskCoordinator;
 import java.time.LocalDateTime;
 import java.util.*;
 import javax.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,13 +41,13 @@ public class Auction {
     private static final String CATEGORY_DIAMANTE = "DIAMANTE";
     */
 
-    private static final Long DURATION_IN_MINUTES = 10L; // 10 minutes
-    private static final Long DURATION_IN_MILI = DURATION_IN_MINUTES*60*1000; // 10 minutes
+    private static final Long DURATION_IN_MINUTES = 1L; // 10 minutes
+    private static final Long DURATION_IN_MILI = DURATION_IN_MINUTES*30*1000; // 10 minutes
 
     @Transient
     @JsonIgnore
     @ToString.Exclude
-    private AuctionTask activeTask = new AuctionTask();
+    private AuctionTask activeTask;
 
 
     @Transient
@@ -76,11 +78,12 @@ public class Auction {
     private LocalDateTime activeUntil;
 
     @OneToMany(mappedBy = "auction")
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Item> items = new ArrayList<>();
 
     @JsonIgnore
     @ToString.Exclude
-    @ManyToMany(targetEntity = User.class, mappedBy = "auctions", cascade = CascadeType.ALL)
+    @ManyToMany(targetEntity = User.class, mappedBy = "auctions", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<User> users = new ArrayList<>();
 
     @Column()
@@ -152,7 +155,6 @@ public class Auction {
             ItemService.saveItemStatic(nextItem); // Feo feo
             AuctionService.saveAuctionStatic(this); // "Si no, no se actualiza el "active until"
         }
-
     }
 
     private void closeAuction() {
@@ -166,8 +168,10 @@ public class Auction {
     // Se llama del service, no necesita del Static save
     public void resetTimer() {
         log.info("Resetting timer for auction {} and item {}.", id, activeItem);
-        activeTask.cancel();
+        AuctionTaskCoordinator.getTask(id).cancel();
+
         activeTask = new AuctionTask();
+        AuctionTaskCoordinator.setTask(id, activeTask);
         timer.schedule(activeTask, DURATION_IN_MILI);
         this.activeUntil = calculateNextActiveUntil();
     }
@@ -176,6 +180,7 @@ public class Auction {
     public void startTimer() {
         log.info("Iniciamos el timer para la subasta: {}", id);
         activeTask = new AuctionTask();
+        AuctionTaskCoordinator.setTask(id, activeTask);
         timer.schedule(activeTask, DURATION_IN_MILI);
         this.activeUntil = calculateNextActiveUntil();
     }
