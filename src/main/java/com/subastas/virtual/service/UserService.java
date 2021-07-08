@@ -193,8 +193,9 @@ public class UserService {
       }
     }
 
+    List<Auction> auctions = user.getAuctions();
     Map<String, Object> analytics = new HashMap<>();
-    analytics.put("auctions_participated", user.getAuctions().size());
+    analytics.put("auctions_participated", auctions.size());
     analytics.put("items_participated", items);
     analytics.put("items_won", itemRepository.countAllByWinnerIdAndStatus(userId, Item.STATUS_FINISHED));
     analytics.put("total_bids", bidRepository.countBidLogsByBidder(userId));

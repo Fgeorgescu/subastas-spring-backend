@@ -47,17 +47,6 @@ public class Auction {
     @Transient
     @JsonIgnore
     @ToString.Exclude
-    private AuctionTask activeTask;
-
-
-    @Transient
-    @JsonIgnore
-    @ToString.Exclude
-    private Timer timer = new Timer();
-
-    @Transient
-    @JsonIgnore
-    @ToString.Exclude
     private TimerTask startTask;
 
     @Id
@@ -84,6 +73,7 @@ public class Auction {
     @JsonIgnore
     @ToString.Exclude
     @ManyToMany(targetEntity = User.class, mappedBy = "auctions", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<User> users = new ArrayList<>();
 
     @Column()
@@ -158,6 +148,7 @@ public class Auction {
     }
 
     private void closeAuction() {
+        AuctionTaskCoordinator.getTimer().purge();
         log.info("Finishing auction: {}", id);
         activeItem = null;
         status = STATUS_FINISHED;
@@ -170,18 +161,18 @@ public class Auction {
         log.info("Resetting timer for auction {} and item {}.", id, activeItem);
         AuctionTaskCoordinator.getTask(id).cancel();
 
-        activeTask = new AuctionTask();
+        TimerTask activeTask = new AuctionTask();
         AuctionTaskCoordinator.setTask(id, activeTask);
-        timer.schedule(activeTask, DURATION_IN_MILI);
+        AuctionTaskCoordinator.getTimer().schedule(activeTask, DURATION_IN_MILI);
         this.activeUntil = calculateNextActiveUntil();
     }
 
     // Quien lo llama tiene la responsabilidad de gaurdar
     public void startTimer() {
         log.info("Iniciamos el timer para la subasta: {}", id);
-        activeTask = new AuctionTask();
+        TimerTask activeTask = new AuctionTask();
         AuctionTaskCoordinator.setTask(id, activeTask);
-        timer.schedule(activeTask, DURATION_IN_MILI);
+        AuctionTaskCoordinator.getTimer().schedule(activeTask, DURATION_IN_MILI);
         this.activeUntil = calculateNextActiveUntil();
     }
 
