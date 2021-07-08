@@ -2,12 +2,15 @@ package com.subastas.virtual.utils;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
 import java.util.TimerTask;
-import org.springframework.stereotype.Component;
 
 /** Horrible class that holds in a Map the active tasks required for the application to work automatically
- * Al ser un component de spring, lo incializa cuando se levanta la app
+ *
+ * Antes, estaba persistinedo el activeTask dentro de una subasta, pero como eso no se persite en la DB (no tiene sentido)
+ * tenemos que extraerlo en algo que siga vivo en todo el proceso de la subasta.
+ *
+ * El candidato ideal sería el servicio de subastas, pero hacerlo desde ahí implica un refator mayor.
+ *
  */
 public class AuctionTaskCoordinator {
 
