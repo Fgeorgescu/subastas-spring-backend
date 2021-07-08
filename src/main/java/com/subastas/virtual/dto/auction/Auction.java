@@ -41,8 +41,8 @@ public class Auction {
     private static final String CATEGORY_DIAMANTE = "DIAMANTE";
     */
 
-    private static final Long DURATION_IN_MINUTES = 1L; // 10 minutes
-    private static final Long DURATION_IN_MILI = DURATION_IN_MINUTES*30*1000; // 10 minutes
+    private static final Long DURATION_IN_MINUTES = 2L; // 10 minutes
+    private static final Long DURATION_IN_MILI = DURATION_IN_MINUTES*60*1000; // 10 minutes
 
     @Transient
     @JsonIgnore
