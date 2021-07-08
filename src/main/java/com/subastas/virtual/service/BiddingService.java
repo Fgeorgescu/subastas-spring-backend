@@ -87,7 +87,7 @@ public class BiddingService {
     item.setCurrentPrice(bidAmount);
     BidLog log = new BidLog(bidAmount, delta, user.getId(), item.getId());
     item.setActiveUntil(auction.getActiveUntil());
-
+    item.setWinnerId(userId);
     bidRepository.save(log);
     auctionService.resetAuctionTimer(item.getAuction());
     itemService.saveItem(item); // FEO

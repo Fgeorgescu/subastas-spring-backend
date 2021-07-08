@@ -186,6 +186,7 @@ public class UserService {
   public Map<String, Object> getUserAnalytics(int userId) {
     User user = getUser(userId);
     int items = 0;
+
     for (Auction a : user.getAuctions()) {
       for (Item i : a.getItems()) {
         items++;

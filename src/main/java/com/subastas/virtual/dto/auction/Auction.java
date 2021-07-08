@@ -127,12 +127,6 @@ public class Auction {
                 .filter(i -> i.getId() == activeItem).findFirst()
                 .orElseThrow(() -> new NotFoundException("Problem, there should be an item here"));
 
-            Optional<BidLog> winningBid = item.getBiddings().stream()
-                .filter(b -> b.getBid() == item.getCurrentPrice()).findFirst();
-
-            // Si tenemos una puja ganadora, ponemos ese usuario como el ganador
-            winningBid.ifPresent(bidLog -> item.setWinnerId(bidLog.getBidder()));
-
             item.setStatus(STATUS_FINISHED); // TODO: Esto se puede sacar a un metodo del item para que el Auction no sepa de estados de Items.
             ItemService.saveItemStatic(item); // Feo feo
         }
