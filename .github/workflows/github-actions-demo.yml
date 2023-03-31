@@ -25,7 +25,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'oracle' # See 'Supported distributions' for available options
-          java-version: '17'
+          java-version: '8'
       - name: Setup Maven
         uses: stCarolas/setup-maven@v.4.5
       - name: Run tests
