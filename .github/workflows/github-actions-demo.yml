@@ -19,6 +19,8 @@ jobs:
   run-tests:
     runs-on: ubuntu-latest
     steps: 
+      - name: Check out repository code
+        uses: actions/checkout@v3
       - name: Setup Java JDK
         uses: actions/setup-java@v3
         with:
