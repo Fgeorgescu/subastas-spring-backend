@@ -16,3 +16,13 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
+  Run tests:
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Setup Java JDK
+        uses: actions/setup-java@v1.4.4
+      - name: Setup Maven
+        uses: stCarolas/setup-maven@v.4.5
+      - name: Run tests
+        run: mvn clean test
+
