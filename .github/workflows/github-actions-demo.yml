@@ -16,7 +16,7 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
-  Run tests:
+  run-tests:
     runs-on: ubuntu-latest
     steps: 
       - name: Setup Java JDK
